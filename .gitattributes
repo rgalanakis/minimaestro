@@ -1,1 +1,6 @@
 *.svg binary
+*.tiff binary
+*.mid binary
+*.plist binary
+*.psd binary
+
