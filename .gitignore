@@ -11,3 +11,10 @@
 /*.userprefs
 /*.pidb
 /*.booproj
+
+# python
+.pyc
+.pyo
+.idea/
+__pycache__
+

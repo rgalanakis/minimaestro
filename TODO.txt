@@ -1,0 +1,22 @@
+Mumm:
+- Play button
+- Stop button
+
+- Menu screen
+- Transitions between menu and game
+- Links on menu page
+
+- test flight integration
+
+- Scale instruments according to the volume of their track
+
+- Tag instruments to section
+- Highlight instruments (dim all other stuff) on section button press-and-hold
+
+Rob:
+- (DONE) Finalize name
+- (DONE) create another demo song
+- Description
+- Finalize songs
+- Find audio person
+- Find artist
