@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/strapped.css" rel="stylesheet">
+  </head>
+  <body>
+
+    <nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand nav-link" href="#top">{{ branding }}</a>
+        </div> <!-- /.navbar-header -->
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#tour" class="nav-link">Tour</a></li>
+            <li><a href="#benefits" class="nav-link">Features</a></li>
+            <li><a href="#support" class="nav-link">Support</a></li>
+            <li><a href="#about" class="nav-link">About</a></li>
+          </ul>
+        </div> <!-- /.navbar-collapse -->
+      </div> <!-- /.container -->
+    </nav> <!-- /.navbar -->
+
+    <div id="top" class="jumbotron">
+      <div class="container">
+        <h1>{{ jumbo_title }}</h1>
+        <h2>{{ jumbo_text }}</h2>
+        <p>
+            <a href="{{ link_itunes }}"><img src="static/img/Download_on_the_App_Store_Badge_US-UK_135x40.svg"></a>
+        </p>
+      </div> <!-- /.container -->
+    </div> <!-- /.jumbotron -->
+
+    <div class="container">
+
+      <h3 id="tour" class="subhead">{{ tour_title }}</h3>
+      <div class="row">
+        <div class="col-md-12">
+          <div id="slideshow" class="carousel slide">
+            <ol class="carousel-indicators">
+              {% for touritem in tour_items %}
+                <li data-target="#slideshow" data-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active"{% endif %}></li>
+              {% endfor %}
+            </ol>
+
+            <div class="carousel-inner">
+              {% for touritem in tour_items %}
+              <div class="item {% if loop.first %}active{% endif %}">
+                <img src="{{ touritem.src }}">
+                <div class="carousel-caption">{{ touritem.caption_html|safe }}</div>
+              </div>
+              {% endfor %}
+            </div>
+
+            <a class="left carousel-control" href="#slideshow" data-slide="prev">
+              <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+            <a class="right carousel-control" href="#slideshow" data-slide="next">
+              <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+          </div> <!-- #slideshow -->
+        </div> <!-- /.col-md-12 -->
+      </div> <!-- /.row -->
+
+      <div class="sect-border"></div>
+
+      <h3 id="benefits" class="subhead">{{ benefits_title }}</h3>
+      <div class="row">
+        {% for benefit in benefits %}
+        <div class="col-md-3 col-sm-3 benefit">
+          <div class="benefit-ball">
+            <span class="glyphicon glyphicon-home"></span>
+          </div>
+          <h3></h3>
+          <p>{{ benefit.text }}</p>
+        </div> <!-- /.benefit -->
+        {% endfor %}
+      </div> <!-- /.row -->
+
+      <div class="sect-border"></div>
+
+      <h3 id="support" class="subhead">{{ support_title }}</h3>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1 text-center">
+            <p>{{ support_html|safe }}</p>
+        </div> <!-- /.col-md-10 -->
+      </div> <!-- /.row -->
+
+      <div class="sect-border"></div>
+
+      <h3 id="about" class="subhead">{{ about_title }}</h3>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1 text-center">
+          {% for p in about_paragraphs %}
+            <p>{{ p }}</p>
+          {% endfor %}
+        </div> <!-- /.col-md-10 -->
+      </div> <!-- /.row -->
+
+    </div> <!-- /.container -->
+
+    <footer>
+      <div class="container clearfix">
+        <p class="pull-left">{{ copyright_html|safe }}</p>
+        <p class="pull-right">
+          a template from <a href="http://coverstrap.com">Coverstrap</a>
+        </p>
+      </div> <!-- /.container -->
+    </footer>
+
+    <script src="static/js/jquery.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script>
+      $(".nav-link").click(function(e) {
+        e.preventDefault();
+        var link = $(this);
+        var href = link.attr("href");
+        $("html,body").animate({scrollTop: $(href).offset().top - 80}, 500);
+        link.closest(".navbar").find(".navbar-toggle:not(.collapsed)").click();
+      });
+    </script>
+  </body>
+</html>
