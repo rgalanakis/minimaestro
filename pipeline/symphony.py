@@ -1,3 +1,4 @@
+from __future__ import print_function
 import fnmatch
 from multiprocessing.pool import ThreadPool
 import os
@@ -55,10 +56,12 @@ def pmap(func, seq):
 
 
 def say(s, *a):
-    print s % a
+    print(s % a)
 
 
 def splitp(path):
     head, tail = os.path.split(path)
     pure, ext = os.path.splitext(tail)
     return head, pure, ext
+
+
