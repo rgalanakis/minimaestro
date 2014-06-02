@@ -97,7 +97,7 @@ Creating these `.mp3` files is up to you.
 Run the `pipeline/copy_mp3s.py` file and pass it the song you are exporting.
 For example:
 
-    $ python pipeline/copy_mp3s.py source_Music/mysong
+    $ python pipeline/copy_mp3s.py mysong
     
 This will copy and compress the songs into the correct directory.
 If there's a problem, the script should tell you what it is.

@@ -35,7 +35,6 @@ INSTRUMENTS = (
     'violin',
     'harp'
 )
-INSTRCNT = len(INSTRUMENTS)
 
 
 def listfiles(path, pattern='*.*'):
