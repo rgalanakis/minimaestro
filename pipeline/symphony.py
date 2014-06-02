@@ -1,4 +1,5 @@
 from __future__ import print_function
+import contextlib
 import fnmatch
 from multiprocessing.pool import ThreadPool
 import os
@@ -65,3 +66,11 @@ def splitp(path):
     return head, pure, ext
 
 
+@contextlib.contextmanager
+def chdir(d):
+    old = os.getcwd()
+    os.chdir(d)
+    try:
+        yield
+    finally:
+        os.chdir(old)
