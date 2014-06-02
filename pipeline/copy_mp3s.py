@@ -28,7 +28,7 @@ def check_sources(srcs):
 
 def get_score_and_tgtdir(srcdir):
     scorename = os.path.split(srcdir)[-1]
-    tgtdir = os.path.join(symphony.UMUSIC, scorename)
+    tgtdir = os.path.join(symphony.USCORES, scorename)
     if not os.path.exists(tgtdir):
         os.makedirs(tgtdir)
     return scorename, tgtdir
