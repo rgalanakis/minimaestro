@@ -9,8 +9,7 @@ DEVNULL = open(os.devnull, 'wb')
 
 PROJROOT = os.path.abspath(join(os.path.dirname(__file__), '..'))
 
-UASSETS = join(PROJROOT, 'Unity', 'Assets')
-#UASSETS = os.path.expanduser('~/fakeunity')
+UASSETS = join(PROJROOT, 'unity', 'Assets')
 UMUSIC = join(UASSETS, 'Music')
 USCORES = join(UMUSIC, 'scores')
 UART = join(UASSETS, 'Art')
