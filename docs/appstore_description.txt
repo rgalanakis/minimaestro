@@ -18,3 +18,16 @@ How the child uses Mini Maestro will change with age.
 Younger children will likely use the Randomize feature and dance to the music.
 Older children and adults will enjoy trying out combinations of instruments,
 and learning about the music, composers, and lyrics.
+
+Mini Maestro is a game about enjoying music.
+It is inspired by a toy my mother bought for my first son.
+I saw how much fun he got out of it:
+exploring instruments, learning classical songs, and just dancing like a madman.
+Mini Maestro aspires to deliver this same joy but in a digital form.
+
+Mini Maestro was created by Brian Mumm and Rob Galanakis.
+Audio by Person X and art by Person Y.
+I hope you enjoy playing Mini Maestro as much as we enjoyed making it!
+
+Please go to <http://www.minimaestrogame.com> for more information,
+and email <support@minimaestrogame.com> for support.
