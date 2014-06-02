@@ -29,5 +29,5 @@ Mini Maestro was created by Brian Mumm and Rob Galanakis.
 Audio by Person X and art by Person Y.
 I hope you enjoy playing Mini Maestro as much as we enjoyed making it!
 
-Please go to <http://www.minimaestrogame.com> for more information,
-and email <support@minimaestrogame.com> for support.
+Please go to http://www.minimaestrogame.com for more information,
+and email support@minimaestrogame.com for support.
