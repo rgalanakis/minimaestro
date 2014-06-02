@@ -18,7 +18,7 @@ Instruments
     - Cymbal
     - Xylophone/Bell
     - Piano
-- Strings
+- Strings:
     - Violin
     - Harp
 
