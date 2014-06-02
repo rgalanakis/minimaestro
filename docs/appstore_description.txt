@@ -1,22 +1,23 @@
 Be a maestro!
 
-Conduct up to 6 instruments to create beautiful music.
-Change the instruments in the orchestra pit to
-transform the music.
+Conduct an orchestra to create beautiful music.
+Change the instruments on stage to
+transform the symphony.
 
 Mini Maestro features:
 
-- 11 instruments and 5 symphonies. Endless combinations!
+- 11 instruments and 5 songs. Endless combinations!
 - Choose from trumpet, tuba, french horn, flute,
   clarinet, drums, cymbals, xylophone, piano, harp, and violin.
-- Learn the sections of the orchestra.
+- Learn the instruments and their sections in an orchestra.
 - NO ADS and NO IN APP PURCHASES, ever.
-  We are parents and know how annoying they can be.
+  We are parents and know how annoying they are.
 
-Mini Maestro is for children ages 2-10, though adults should enjoy it as well.
-How the child uses Mini Maestro will change with age.
-Younger children will likely use the Randomize feature and dance to the music.
-Older children and adults will enjoy trying out combinations of instruments,
+Mini Maestro is for children ages 2-10,
+though adults will enjoy it as well.
+How a child uses Mini Maestro changes with age.
+Younger children use the Randomize feature and dance to the music.
+Older children and adults enjoy trying out combinations of instruments,
 and learning about the music, composers, and lyrics.
 
 Mini Maestro is a game about enjoying music.
@@ -24,10 +25,7 @@ It is inspired by a toy my mother bought for my first son.
 I saw how much fun he got out of it:
 exploring instruments, learning classical songs, and just dancing like a madman.
 Mini Maestro aspires to deliver this same joy but in a digital form.
-
-Mini Maestro was created by Brian Mumm and Rob Galanakis.
-Audio by Person X and art by Person Y.
 I hope you enjoy playing Mini Maestro as much as we enjoyed making it!
 
-Please go to http://www.minimaestrogame.com for more information,
-and email support@minimaestrogame.com for support.
+Go to http://www.minimaestrogame.com for more information.
+Email support@minimaestrogame.com for support.
