@@ -1,3 +1,6 @@
+Instructions for getting set up with TestFlight,
+which allows someone to best test games like Mini Maestro.
+
 1. You receive an email invitation to join Test Flight.
 2. Follow the 'Accept' link to sign up.
 3. You receive a Welcome email from TestFlight.
