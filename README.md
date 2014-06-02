@@ -1,7 +1,7 @@
 minimaestro
 ===========
 
-Our game.
+<http://minimaestrogame.herokuapp.com/>
 
 Instruments
 ---
@@ -22,11 +22,11 @@ Instruments
     - Violin
     - Harp
 
-
 Songs
 ---
 
-- Spring from the Four Seasons: Yay!
+- Ride of the Valkyrie: Excellent.
+- Spring from the Four Seasons: Using for demo, but not enough variety of instruments.
 - Overature to William Tell: Would need to be cleaned up to just the interesting parts.
 - Fur Elise: Already used by B Toys. Only Piano.
 - Hall of the Mountain King
