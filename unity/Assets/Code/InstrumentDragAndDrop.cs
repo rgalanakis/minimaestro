@@ -19,6 +19,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
     private int normalDepth = 12;
     private Color offStageColor;
     private Color onStageColor;
+    public GameObject musicNotes;
     protected override void Start()
     {
         base.Start();
@@ -30,6 +31,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
 
         offStageColor = new Color(0.80f, 0.80f, 0.80f, 1f);
         onStageColor = Color.white;
+        musicNotes.SetActive(false);
         SetContainerAndUpdate(currentContainer);
     }
 
@@ -109,15 +111,13 @@ public class InstrumentDragAndDrop : UIDragDropItem
         {
             if (targetContainer.tag == "stage_grid")
             {
-                instrument.color = onStageColor;
-                container.color = onStageColor;
+                musicNotes.SetActive(true);
                 ScaleTweenFinished();
                 audio.volume = 1.0f;
             }
             else
             {
-                instrument.color = offStageColor;
-                container.color = offStageColor;
+                musicNotes.SetActive(false);
                 transform.localScale = Vector3.one;
                 audio.volume = 0.0f;
             }
