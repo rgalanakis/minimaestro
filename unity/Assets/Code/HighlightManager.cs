@@ -12,9 +12,10 @@ public class HighlightManager : MonoBehaviour
     public InstrumentDragAndDrop[] brasses;
     public InstrumentDragAndDrop[] strings;
     public InstrumentDragAndDrop[] percussions;
+    public UILabel sectionLabel;
     enum InstrumentType
     {
-        Wind = 0,
+        Woodwind = 0,
         String = 1,
         Brass = 2,
         Percussion = 3
@@ -22,79 +23,58 @@ public class HighlightManager : MonoBehaviour
     void Start()
     {
         blackOverlay.gameObject.SetActive(false);
+        sectionLabel.gameObject.SetActive(false);
         blackOverlay.SetDimensions(Screen.width * 3, Screen.height * 3);
-        UIEventListener.Get(windButton).onPress += OnButtonWind;
-        UIEventListener.Get(stringButton).onPress += OnButtonString;
-        UIEventListener.Get(brassButton).onPress += OnButtonBrass;
-        UIEventListener.Get(percussionButton).onPress += OnButtonPercussion;
+        UIEventListener.Get(windButton).onClick += OnButtonWind;
+        UIEventListener.Get(stringButton).onClick += OnButtonString;
+        UIEventListener.Get(brassButton).onClick += OnButtonBrass;
+        UIEventListener.Get(percussionButton).onClick += OnButtonPercussion;
     }
     
     void OnDestroy()
     {
-        NGUIHelper.RemovePressEventListener(windButton, OnButtonWind);
-        NGUIHelper.RemovePressEventListener(stringButton, OnButtonString);
-        NGUIHelper.RemovePressEventListener(brassButton, OnButtonBrass);
-        NGUIHelper.RemovePressEventListener(percussionButton, OnButtonPercussion);
+        NGUIHelper.RemoveClickEventListener(windButton, OnButtonWind);
+        NGUIHelper.RemoveClickEventListener(stringButton, OnButtonString);
+        NGUIHelper.RemoveClickEventListener(brassButton, OnButtonBrass);
+        NGUIHelper.RemoveClickEventListener(percussionButton, OnButtonPercussion);
+    }
+    void Update()
+    {
+        if (blackOverlay.gameObject.activeSelf)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                DisplayBlackOverlay(false);
+                NoHighlight();
+            }
+        }
     }
     void DisplayBlackOverlay(bool display)
     {
         blackOverlay.gameObject.SetActive(display);
     }
-    void OnButtonWind(GameObject go, bool press)
+    void OnButtonWind(GameObject go)
     {
-        if (press)
-        {
-            DisplayBlackOverlay(true);
-            Highlight(InstrumentType.Wind);
-        }
-        else
-        {
-            DisplayBlackOverlay(false);
-            NoHighlight();
-        }
+        DisplayBlackOverlay(true);
+        Highlight(InstrumentType.Woodwind);
     }
     
-    void OnButtonString(GameObject go, bool press)
+    void OnButtonString(GameObject go)
     {
-        if (press)
-        {
-            DisplayBlackOverlay(true);
-            Highlight(InstrumentType.String);
-        }
-        else
-        {
-            DisplayBlackOverlay(false);
-            NoHighlight();
-        }
+        DisplayBlackOverlay(true);
+        Highlight(InstrumentType.String);
     }
     
-    void OnButtonBrass(GameObject go, bool press)
+    void OnButtonBrass(GameObject go)
     {
-        if (press)
-        {
-            DisplayBlackOverlay(true);
-            Highlight(InstrumentType.Brass);
-        }
-        else
-        {
-            DisplayBlackOverlay(false);
-            NoHighlight();
-        }
-
+        DisplayBlackOverlay(true);
+        Highlight(InstrumentType.Brass);
     }
 
-    void OnButtonPercussion(GameObject go, bool press)
+    void OnButtonPercussion(GameObject go)
     {
-        if (press)
-        {
-            DisplayBlackOverlay(true);
-            Highlight(InstrumentType.Percussion);
-        }
-        else
-        {
-            DisplayBlackOverlay(false);
-            NoHighlight();
-        }
+        DisplayBlackOverlay(true);
+        Highlight(InstrumentType.Percussion);
     }
 
     void EnableHighlightGroup(InstrumentDragAndDrop[] group, bool highlight)
@@ -106,6 +86,7 @@ public class HighlightManager : MonoBehaviour
     }
     void NoHighlight()
     {
+        sectionLabel.gameObject.SetActive(false);
         EnableHighlightGroup(winds, false);
         EnableHighlightGroup(brasses, false);
         EnableHighlightGroup(strings, false);
@@ -114,20 +95,25 @@ public class HighlightManager : MonoBehaviour
     void Highlight(InstrumentType type)
     {
         NoHighlight();
-        if (type == InstrumentType.Wind)
+        sectionLabel.gameObject.SetActive(true);
+        if (type == InstrumentType.Woodwind)
         {
+            sectionLabel.text = "Woodwind Instruments";
             EnableHighlightGroup(winds, true);
         }
         else if (type == InstrumentType.Brass)
         {
+            sectionLabel.text = "Brass Instruments";
             EnableHighlightGroup(brasses, true);
         }
         else if (type == InstrumentType.String)
         {
+            sectionLabel.text = "String Instruments";
             EnableHighlightGroup(strings, true);
         }
         else
         {
+            sectionLabel.text = "Percussion Instruments";
             EnableHighlightGroup(percussions, true);
         }
     }
