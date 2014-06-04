@@ -14,18 +14,23 @@ public class InstrumentDragAndDrop : UIDragDropItem
     private float[] samples;     // audio samples
     private Vector3 volumeScale = Vector3.one;
     public float tweenDuration;
-
+    private new BoxCollider collider;
     private int highlightDepth = 14;
     private int normalDepth = 12;
-
+    private Color offStageColor;
+    private Color onStageColor;
     protected override void Start()
     {
         base.Start();
         startingContainer = NGUITools.FindInParents<UIDragDropContainer>(this.gameObject).gameObject;
         currentContainer = startingContainer;
         audio = GetComponent<AudioSource>();
-        audio.volume = 0.0f;
         samples = new float[qSamples];
+        collider = GetComponent<BoxCollider>();
+
+        offStageColor = new Color(0.80f, 0.80f, 0.80f, 1f);
+        onStageColor = Color.white;
+        SetContainerAndUpdate(currentContainer);
     }
 
     public void ScaleTweenFinished()
@@ -51,6 +56,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
             dbValue = -160;   // clamp it to -160 dB min
         }
     }
+
     protected override void OnDragDropRelease(GameObject target)
     {
         if (target == null)
@@ -96,15 +102,22 @@ public class InstrumentDragAndDrop : UIDragDropItem
     {
         currentContainer = targetContainer;
         base.OnDragDropRelease(targetContainer);
+
+        UISprite instrument = this.GetComponent<UISprite>();
+        UISprite container = currentContainer.GetComponent<UISprite>();
         if (targetContainer != null)
         {
             if (targetContainer.tag == "stage_grid")
             {
+                instrument.color = onStageColor;
+                container.color = onStageColor;
                 ScaleTweenFinished();
                 audio.volume = 1.0f;
             }
             else
             {
+                instrument.color = offStageColor;
+                container.color = offStageColor;
                 transform.localScale = Vector3.one;
                 audio.volume = 0.0f;
             }
@@ -113,6 +126,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
 
     public void HighlightWithContainer(bool highlight)
     {
+        collider.enabled = !highlight;
         if (highlight)
         {
             this.GetComponent<UISprite>().depth = highlightDepth;
