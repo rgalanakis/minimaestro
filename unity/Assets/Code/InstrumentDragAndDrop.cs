@@ -17,8 +17,8 @@ public class InstrumentDragAndDrop : UIDragDropItem
     private new BoxCollider collider;
     private int highlightDepth = 14;
     private int normalDepth = 12;
-    private Color offStageColor;
-    private Color onStageColor;
+    //private Color offStageColor;
+    //private Color onStageColor;
     public GameObject musicNotes;
     protected override void Start()
     {
@@ -29,8 +29,8 @@ public class InstrumentDragAndDrop : UIDragDropItem
         samples = new float[qSamples];
         collider = GetComponent<BoxCollider>();
 
-        offStageColor = new Color(0.80f, 0.80f, 0.80f, 1f);
-        onStageColor = Color.white;
+        //offStageColor = new Color(0.80f, 0.80f, 0.80f, 1f);
+        //onStageColor = Color.white;
         musicNotes.SetActive(false);
         SetContainerAndUpdate(currentContainer);
     }
@@ -58,7 +58,11 @@ public class InstrumentDragAndDrop : UIDragDropItem
             dbValue = -160;   // clamp it to -160 dB min
         }
     }
-
+    protected override void OnDragDropStart()
+    {
+        InstrumentEventManager.TriggerInstrumentDrag(this.gameObject);
+        base.OnDragDropStart();
+    }
     protected override void OnDragDropRelease(GameObject target)
     {
         if (target == null)
@@ -104,9 +108,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
     {
         currentContainer = targetContainer;
         base.OnDragDropRelease(targetContainer);
-
-        UISprite instrument = this.GetComponent<UISprite>();
-        UISprite container = currentContainer.GetComponent<UISprite>();
+        InstrumentEventManager.TriggerInstrumentDrop(targetContainer.gameObject, this.gameObject);
         if (targetContainer != null)
         {
             if (targetContainer.tag == "stage_grid")
