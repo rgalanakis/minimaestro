@@ -133,11 +133,13 @@ public class InstrumentDragAndDrop : UIDragDropItem
         {
             this.GetComponent<UISprite>().depth = highlightDepth;
             currentContainer.GetComponent<UISprite>().depth = highlightDepth - 1;
+            startingContainer.GetComponent<UISprite>().depth = highlightDepth - 1;
         }
         else
         {
             this.GetComponent<UISprite>().depth = normalDepth;
             currentContainer.GetComponent<UISprite>().depth = normalDepth - 1;
+            startingContainer.GetComponent<UISprite>().depth = normalDepth - 1;
         }
     }
 
