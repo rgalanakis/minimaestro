@@ -4,7 +4,6 @@ using System.Collections;
 public class MusicManager : MonoBehaviour
 {
     public GameObject playButton;
-    public GameObject stopButton;
     public GameObject demoButton;
 
     public AudioSource xylophone;
@@ -27,14 +26,12 @@ public class MusicManager : MonoBehaviour
     void Start()
     {
         UIEventListener.Get(playButton).onClick += OnButtonPlay;
-        UIEventListener.Get(stopButton).onClick += OnButtonStop;
         UIEventListener.Get(demoButton).onClick += OnButtonDemo;
     }
 
     void OnDestroy()
     {
         NGUIHelper.RemoveClickEventListener(playButton, OnButtonPlay);
-        NGUIHelper.RemoveClickEventListener(stopButton, OnButtonStop);
         NGUIHelper.RemoveClickEventListener(demoButton, OnButtonDemo);
     }
 
@@ -49,21 +46,6 @@ public class MusicManager : MonoBehaviour
             SwitchSong(valkyrie);
             currentSongPlaying = valkyrie;
         }
-    }
-
-    void OnButtonStop(GameObject go)
-    {
-        xylophone.Stop();
-        violin.Stop();
-        tuba.Stop();
-        cymbals.Stop();
-        harp.Stop();
-        flute.Stop();
-        trumpet.Stop();
-        piano.Stop();
-        clarinet.Stop();
-        drums.Stop();
-        horn.Stop(); 
     }
 
     void OnButtonDemo(GameObject go)
