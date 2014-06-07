@@ -54,13 +54,4 @@ public class StageContainer : UIDragDropContainer
 		glowSparkle.startColor = new Color(col.r, col.g, col.b, mult);
 		glowSparkle.gameObject.SetActive(true);
 	}
-
-	private static string TS(object o)
-	{
-		if (o == null)
-		{
-			return "<null>";
-		}
-		return o.ToString();
-	}
 }
