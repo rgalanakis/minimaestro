@@ -35,13 +35,13 @@ public class InstrumentDragAndDrop : UIDragDropItem
 
     public void ScaleTweenFinished()
     {
-        GetVolume();
+        UpdateVolume();
         float scaleValue = Mathf.Lerp(1.0f, 1.2f, rmsValue / 0.3f);
         volumeScale.Set(scaleValue, scaleValue, transform.localScale.z);
         TweenScale.Begin(this.gameObject, tweenDuration, volumeScale);
     }
 
-    void GetVolume()
+    void UpdateVolume()
     {
         audio.GetOutputData(samples, 0);  // fill array with samples
         float sum = 0;
@@ -56,11 +56,13 @@ public class InstrumentDragAndDrop : UIDragDropItem
             dbValue = -160;   // clamp it to -160 dB min
         }
     }
+
     protected override void OnDragDropStart()
     {
         InstrumentEventManager.TriggerInstrumentDrag(this.gameObject);
         base.OnDragDropStart();
     }
+
     protected override void OnDragDropRelease(GameObject target)
     {
         if (target == null)
