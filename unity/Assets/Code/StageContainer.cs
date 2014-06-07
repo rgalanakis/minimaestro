@@ -5,8 +5,8 @@ public class StageContainer : UIDragDropContainer
 {
     public ParticleSystem glowSparkle;
     private GameObject instrumentOnStage;
-    private Color dragColorMult = new Color(1f, 1f, 1f, 0.2f);
-    private Color hasInstrumentColorMult = new Color(1f, 1f, 1f, 0.3f);
+	private float dragColorAlpha = 0.1f;
+    private float hasInstrumentColorAlpha = 0.2f;
     // Use this for initialization
     void Start()
     {
@@ -19,14 +19,20 @@ public class StageContainer : UIDragDropContainer
         InstrumentEventManager.Drag -= DragGlow;
     }
 
+	private void SetStartColor(InstrumentDragAndDrop instrument, float mult)
+	{
+		glowSparkle.gameObject.SetActive(true);
+		Color col = instrument.instrumentColor;
+		glowSparkle.startColor = new Color(col.r, col.g, col.b, mult);
+	}
+
     void DragGlow(GameObject instrumentObj)
     {
 		var instrument = instrumentObj.GetComponent<InstrumentDragAndDrop>();
         if (instrumentOnStage == null || instrument == instrumentOnStage)
         {
             instrumentOnStage = null;
-            glowSparkle.gameObject.SetActive(true);
-            glowSparkle.startColor = instrument.instrumentColor * dragColorMult;
+			SetStartColor(instrument, dragColorAlpha);
         }
     }
 
@@ -35,8 +41,7 @@ public class StageContainer : UIDragDropContainer
 		var instrument = instrumentObj.GetComponent<InstrumentDragAndDrop>();
         if (container == this.gameObject)
         {
-            glowSparkle.gameObject.SetActive(true);
-            glowSparkle.startColor = instrument.instrumentColor * hasInstrumentColorMult;
+			SetStartColor(instrument, hasInstrumentColorAlpha);
             instrumentOnStage = instrumentObj;
         }
         else if (instrumentOnStage != null)
