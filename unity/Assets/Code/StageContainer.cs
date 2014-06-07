@@ -8,7 +8,6 @@ public class StageContainer : UIDragDropContainer
     private float dragColorAlpha = 0.1f;
     private float hasInstrumentColorAlpha = 0.2f;
     private Color defaultColor = new Color(1f, 1f, 1f, 0.02f);
-    private Color noHighlightColor = new Color(0.1f, 0.1f, 0.1f, 0.2f);
     void Start()
     {
         // We have these disabled in the editor, enable them here.
@@ -73,11 +72,10 @@ public class StageContainer : UIDragDropContainer
     {
         if (instrumentOnStage != null)
         {
-            InstrumentDragAndDrop instrument = instrumentOnStage.GetComponent<InstrumentDragAndDrop>();
-            StartSparkle(instrument, hasInstrumentColorAlpha);
+            glowSparkle.gameObject.SetActive(true);
         }
     }
-    
+
     public void HighlightWithContainer(HighlightManager.InstrumentType instrumentType)
     {
         if (instrumentOnStage != null)
@@ -85,9 +83,9 @@ public class StageContainer : UIDragDropContainer
             InstrumentDragAndDrop instrument = instrumentOnStage.GetComponent<InstrumentDragAndDrop>();
             if (instrument.instrumentType != instrumentType)
             {
-                glowSparkle.startColor = noHighlightColor;
+                glowSparkle.gameObject.SetActive(false);
             }
         }
-        
+
     }
 }
