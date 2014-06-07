@@ -7,10 +7,12 @@ public class StageContainer : UIDragDropContainer
     private GameObject instrumentOnStage;
 	private float dragColorAlpha = 0.1f;
     private float hasInstrumentColorAlpha = 0.2f;
+	private Color defaultColor = new Color(1f, 1f, 1f, 0.02f);
 
     void Start()
-    {
-        glowSparkle.gameObject.SetActive(false);
+	{
+		glowSparkle.gameObject.SetActive(true);
+		StopSparkle();
         InstrumentEventManager.Drag += DragGlow;
         InstrumentEventManager.Drop += DropInstrument;
     }
@@ -44,7 +46,7 @@ public class StageContainer : UIDragDropContainer
         else
         {
             instrumentOnStage = null;
-            glowSparkle.gameObject.SetActive(false);
+			StopSparkle();
         }
     }
 	
@@ -52,6 +54,14 @@ public class StageContainer : UIDragDropContainer
 	{
 		Color col = instrument.instrumentColor;
 		glowSparkle.startColor = new Color(col.r, col.g, col.b, mult);
-		glowSparkle.gameObject.SetActive(true);
+		//glowSparkle.gameObject.SetActive(true);
+		glowSparkle.gameObject.renderer.enabled = true;
+	}
+
+	private void StopSparkle()
+	{
+		glowSparkle.startColor = defaultColor;
+		glowSparkle.gameObject.renderer.enabled = false;
+		//glowSparkle.gameObject.SetActive(false);
 	}
 }
