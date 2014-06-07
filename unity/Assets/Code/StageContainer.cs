@@ -11,6 +11,7 @@ public class StageContainer : UIDragDropContainer
 
     void Start()
 	{
+		// We have these disabled in the editor, enable them here.
 		glowSparkle.gameObject.SetActive(true);
 		StopSparkle();
         InstrumentEventManager.Drag += DragGlow;
@@ -49,7 +50,9 @@ public class StageContainer : UIDragDropContainer
 			StopSparkle();
         }
     }
-	
+
+	// Use renderer.enabled, so the particles can change color under the hood.
+	// Using SetActive will not allow the particles to change color while invisible.
 	private void StartSparkle(InstrumentDragAndDrop instrument, float mult)
 	{
 		Color col = instrument.instrumentColor;
