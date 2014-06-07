@@ -15,11 +15,13 @@ public class InstrumentDragAndDrop : UIDragDropItem
     private Vector3 volumeScale = Vector3.one;
     public float tweenDuration;
     private new BoxCollider collider;
-    private int highlightDepth = 14;
+    private int highlightDepth = 15;
     private int normalDepth = 12;
-	public Color instrumentColor;
-    public GameObject musicNotes;
-
+    public Color instrumentColor;
+    public ParticleSystem musicNotes;
+    public HighlightManager.InstrumentType instrumentType;
+    private Color normalColor = Color.white;
+    private Color noHighlightColor = new Color(0.3f, 0.3f, 0.3f, 1.0f);
     protected override void Start()
     {
         base.Start();
@@ -29,13 +31,16 @@ public class InstrumentDragAndDrop : UIDragDropItem
         samples = new float[qSamples];
         collider = GetComponent<BoxCollider>();
 
-        musicNotes.SetActive(false);
+        musicNotes.gameObject.SetActive(false);
         SetContainerAndUpdate(currentContainer);
+        HighlightEventManager.Highlight += HighlightWithContainer;
+        HighlightEventManager.NoHighlight += NoHightlight;
     }
 
     public void ScaleTweenFinished()
     {
         UpdateVolume();
+        UpdateNotes();
         float scaleValue = Mathf.Lerp(1.0f, 1.2f, rmsValue / 0.3f);
         volumeScale.Set(scaleValue, scaleValue, transform.localScale.z);
         TweenScale.Begin(this.gameObject, tweenDuration, volumeScale);
@@ -57,6 +62,21 @@ public class InstrumentDragAndDrop : UIDragDropItem
         }
     }
 
+    void UpdateNotes()
+    {
+        if (audio.volume == 0.0f)
+        {
+            return;
+        }
+        if (dbValue <= -160)
+        {
+            musicNotes.gameObject.SetActive(false);
+        }
+        else if (!musicNotes.gameObject.activeSelf)
+        {
+            musicNotes.gameObject.SetActive(true);
+        }
+    }
     protected override void OnDragDropStart()
     {
         InstrumentEventManager.TriggerInstrumentDrag(this.gameObject);
@@ -113,34 +133,46 @@ public class InstrumentDragAndDrop : UIDragDropItem
         {
             if (targetContainer.tag == "stage_grid")
             {
-                musicNotes.SetActive(true);
+                musicNotes.gameObject.SetActive(true);
                 ScaleTweenFinished();
                 audio.volume = 1.0f;
             }
             else
             {
-                musicNotes.SetActive(false);
+                musicNotes.gameObject.SetActive(false);
                 transform.localScale = Vector3.one;
                 audio.volume = 0.0f;
             }
         }
     }
 
-    public void HighlightWithContainer(bool highlight)
+    private void NoHightlight()
     {
-        collider.enabled = !highlight;
-        if (highlight)
+        collider.enabled = true;
+        this.GetComponent<UISprite>().color = normalColor; 
+    }
+
+    public void HighlightWithContainer(HighlightManager.InstrumentType type)
+    {
+        collider.enabled = false;
+        UISprite sprite = this.GetComponent<UISprite>();
+        if (instrumentType == type)
         {
-            this.GetComponent<UISprite>().depth = highlightDepth;
+            sprite.depth = highlightDepth;
             currentContainer.GetComponent<UISprite>().depth = highlightDepth - 1;
             startingContainer.GetComponent<UISprite>().depth = highlightDepth - 1;
         }
         else
         {
-            this.GetComponent<UISprite>().depth = normalDepth;
+            sprite.depth = normalDepth;
+            if (currentContainer.tag == "stage_grid")
+            {
+                sprite.color = noHighlightColor;
+            }
             currentContainer.GetComponent<UISprite>().depth = normalDepth - 1;
             startingContainer.GetComponent<UISprite>().depth = normalDepth - 1;
         }
+
     }
 
 }

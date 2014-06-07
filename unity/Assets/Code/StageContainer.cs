@@ -5,18 +5,21 @@ public class StageContainer : UIDragDropContainer
 {
     public ParticleSystem glowSparkle;
     private GameObject instrumentOnStage;
-	private float dragColorAlpha = 0.1f;
+    private float dragColorAlpha = 0.1f;
     private float hasInstrumentColorAlpha = 0.2f;
-	private Color defaultColor = new Color(1f, 1f, 1f, 0.02f);
-
+    private Color defaultColor = new Color(1f, 1f, 1f, 0.02f);
+    private Color noHighlightColor = new Color(0.1f, 0.1f, 0.1f, 0.2f);
     void Start()
-	{
-		// We have these disabled in the editor, enable them here.
-		glowSparkle.gameObject.SetActive(true);
-		StopSparkle();
+    {
+        // We have these disabled in the editor, enable them here.
+        glowSparkle.gameObject.SetActive(true);
+        StopSparkle();
         InstrumentEventManager.Drag += DragGlow;
         InstrumentEventManager.Drop += DropInstrument;
+        HighlightEventManager.Highlight += HighlightWithContainer;
+        HighlightEventManager.NoHighlight += NoHightlight;
     }
+
     void OnDestroy()
     {
         InstrumentEventManager.Drag -= DragGlow;
@@ -24,20 +27,20 @@ public class StageContainer : UIDragDropContainer
 
     void DragGlow(GameObject instrumentObj)
     {
-		var instrument = instrumentObj.GetComponent<InstrumentDragAndDrop>();
+        InstrumentDragAndDrop instrument = instrumentObj.GetComponent<InstrumentDragAndDrop>();
         if (instrumentOnStage == null || instrumentObj == instrumentOnStage)
         {
             instrumentOnStage = null;
-			StartSparkle(instrument, dragColorAlpha);
+            StartSparkle(instrument, dragColorAlpha);
         }
     }
 
     public void DropInstrument(GameObject container, GameObject instrumentObj)
     {
-		var instrument = instrumentObj.GetComponent<InstrumentDragAndDrop>();
+        InstrumentDragAndDrop instrument = instrumentObj.GetComponent<InstrumentDragAndDrop>();
         if (container == this.gameObject)
         {
-			StartSparkle(instrument, hasInstrumentColorAlpha);
+            StartSparkle(instrument, hasInstrumentColorAlpha);
             instrumentOnStage = instrumentObj;
         }
         else if (instrumentOnStage != null)
@@ -47,24 +50,44 @@ public class StageContainer : UIDragDropContainer
         else
         {
             instrumentOnStage = null;
-			StopSparkle();
+            StopSparkle();
         }
     }
 
-	// Use renderer.enabled, so the particles can change color under the hood.
-	// Using SetActive will not allow the particles to change color while invisible.
-	private void StartSparkle(InstrumentDragAndDrop instrument, float mult)
-	{
-		Color col = instrument.instrumentColor;
-		glowSparkle.startColor = new Color(col.r, col.g, col.b, mult);
-		//glowSparkle.gameObject.SetActive(true);
-		glowSparkle.gameObject.renderer.enabled = true;
-	}
+    // Use renderer.enabled, so the particles can change color under the hood.
+    // Using SetActive will not allow the particles to change color while invisible.
+    private void StartSparkle(InstrumentDragAndDrop instrument, float mult)
+    {
+        Color col = instrument.instrumentColor;
+        glowSparkle.startColor = new Color(col.r, col.g, col.b, mult);
+        glowSparkle.Play();
+    }
 
-	private void StopSparkle()
-	{
-		glowSparkle.startColor = defaultColor;
-		glowSparkle.gameObject.renderer.enabled = false;
-		//glowSparkle.gameObject.SetActive(false);
-	}
+    private void StopSparkle()
+    {
+        glowSparkle.startColor = defaultColor;
+        glowSparkle.Stop();
+    }
+
+    private void NoHightlight()
+    {
+        if (instrumentOnStage != null)
+        {
+            InstrumentDragAndDrop instrument = instrumentOnStage.GetComponent<InstrumentDragAndDrop>();
+            StartSparkle(instrument, hasInstrumentColorAlpha);
+        }
+    }
+    
+    public void HighlightWithContainer(HighlightManager.InstrumentType instrumentType)
+    {
+        if (instrumentOnStage != null)
+        {
+            InstrumentDragAndDrop instrument = instrumentOnStage.GetComponent<InstrumentDragAndDrop>();
+            if (instrument.instrumentType != instrumentType)
+            {
+                glowSparkle.startColor = noHighlightColor;
+            }
+        }
+        
+    }
 }
