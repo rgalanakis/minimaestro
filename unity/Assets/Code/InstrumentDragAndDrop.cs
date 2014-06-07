@@ -17,9 +17,9 @@ public class InstrumentDragAndDrop : UIDragDropItem
     private new BoxCollider collider;
     private int highlightDepth = 14;
     private int normalDepth = 12;
-    //private Color offStageColor;
-    //private Color onStageColor;
+	public Color instrumentColor;
     public GameObject musicNotes;
+
     protected override void Start()
     {
         base.Start();
@@ -28,9 +28,8 @@ public class InstrumentDragAndDrop : UIDragDropItem
         audio = GetComponent<AudioSource>();
         samples = new float[qSamples];
         collider = GetComponent<BoxCollider>();
+		instrumentColor = Color.red;
 
-        //offStageColor = new Color(0.80f, 0.80f, 0.80f, 1f);
-        //onStageColor = Color.white;
         musicNotes.SetActive(false);
         SetContainerAndUpdate(currentContainer);
     }
