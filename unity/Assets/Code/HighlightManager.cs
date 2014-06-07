@@ -28,6 +28,8 @@ public class HighlightManager : MonoBehaviour
         UIEventListener.Get(stringButton).onClick += OnButtonClick;
         UIEventListener.Get(brassButton).onClick += OnButtonClick;
         UIEventListener.Get(percussionButton).onClick += OnButtonClick;
+		HighlightEventManager.Highlight += OnHighlightOn;
+		HighlightEventManager.NoHighlight += OnHighlightOff;
 	}
 
     void OnDestroy()
@@ -36,6 +38,8 @@ public class HighlightManager : MonoBehaviour
         NGUIHelper.RemoveClickEventListener(stringButton, OnButtonClick);
         NGUIHelper.RemoveClickEventListener(brassButton, OnButtonClick);
         NGUIHelper.RemoveClickEventListener(percussionButton, OnButtonClick);
+		HighlightEventManager.Highlight -= OnHighlightOn;
+		HighlightEventManager.NoHighlight -= OnHighlightOff;
     }
 
     void Update()
@@ -44,15 +48,26 @@ public class HighlightManager : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                blackOverlay.gameObject.SetActive(false);
                 HighlightEventManager.TriggerInstrumentNoHighlight();
             }
         }
     }
 
+	void OnHighlightOn(InstrumentType instrumentType)
+	{		
+		sectionLabel.text = instrumentType.ToString("F");
+		sectionLabel.gameObject.SetActive(true);
+		blackOverlay.gameObject.SetActive(true);
+	}
+
+	void OnHighlightOff()
+	{
+		sectionLabel.gameObject.SetActive(false);
+		blackOverlay.gameObject.SetActive(false);
+	}
+
     void OnButtonClick(GameObject go)
     {
-        blackOverlay.gameObject.SetActive(true);
 		InstrumentType it;
         if (go == windButton)
         {
