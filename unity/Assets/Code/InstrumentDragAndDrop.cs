@@ -28,7 +28,6 @@ public class InstrumentDragAndDrop : UIDragDropItem
         audio = GetComponent<AudioSource>();
         samples = new float[qSamples];
         collider = GetComponent<BoxCollider>();
-		instrumentColor = Color.red;
 
         musicNotes.SetActive(false);
         SetContainerAndUpdate(currentContainer);
