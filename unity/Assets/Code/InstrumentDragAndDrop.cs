@@ -22,6 +22,9 @@ public class InstrumentDragAndDrop : UIDragDropItem
     public HighlightManager.InstrumentType instrumentType;
     private Color normalColor = Color.white;
     private Color noHighlightColor = new Color(0.3f, 0.3f, 0.3f, 1.0f);
+	public int notePulseCount = 4;
+	public float notePulseThreshold = 2.2f;
+
     protected override void Start()
     {
         base.Start();
@@ -72,7 +75,11 @@ public class InstrumentDragAndDrop : UIDragDropItem
         }
         else
         {
-            musicNotes.gameObject.SetActive(true);
+			musicNotes.gameObject.SetActive(true);
+			if (dbValue > notePulseThreshold)
+			{
+				musicNotes.Emit(notePulseCount);
+			}
         }
     }
 
