@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Diagnostics;
 
 public class HighlightManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class HighlightManager : MonoBehaviour
     public GameObject percussionButton;
     public UISprite blackOverlay;
     public UILabel sectionLabel;
+
     public enum InstrumentType
     {
         Woodwind = 0,
@@ -16,6 +18,7 @@ public class HighlightManager : MonoBehaviour
         Brass = 2,
         Percussion = 3
     }
+
     void Start()
     {
         blackOverlay.gameObject.SetActive(false);
@@ -25,8 +28,8 @@ public class HighlightManager : MonoBehaviour
         UIEventListener.Get(stringButton).onClick += OnButtonClick;
         UIEventListener.Get(brassButton).onClick += OnButtonClick;
         UIEventListener.Get(percussionButton).onClick += OnButtonClick;
-    }
-    
+	}
+
     void OnDestroy()
     {
         NGUIHelper.RemoveClickEventListener(windButton, OnButtonClick);
@@ -34,6 +37,7 @@ public class HighlightManager : MonoBehaviour
         NGUIHelper.RemoveClickEventListener(brassButton, OnButtonClick);
         NGUIHelper.RemoveClickEventListener(percussionButton, OnButtonClick);
     }
+
     void Update()
     {
         if (blackOverlay.gameObject.activeSelf)
@@ -45,25 +49,29 @@ public class HighlightManager : MonoBehaviour
             }
         }
     }
+
     void OnButtonClick(GameObject go)
     {
         blackOverlay.gameObject.SetActive(true);
+		InstrumentType it;
         if (go == windButton)
         {
-            HighlightEventManager.TriggerInstrumentHighlight(InstrumentType.Woodwind);
+			it = InstrumentType.Woodwind;
         }
         else if (go == stringButton)
         {
-            HighlightEventManager.TriggerInstrumentHighlight(InstrumentType.String);
+			it = InstrumentType.String;
         }
         else if (go == brassButton)
         {
-            HighlightEventManager.TriggerInstrumentHighlight(InstrumentType.Brass);
+			it = InstrumentType.Brass;
         }
         else
         {
-            HighlightEventManager.TriggerInstrumentHighlight(InstrumentType.Percussion);
+			System.Diagnostics.Debug.Assert(go == percussionButton);
+            it = InstrumentType.Percussion;
         }
+		HighlightEventManager.TriggerInstrumentHighlight(it);
        
     }
 
