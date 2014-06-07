@@ -41,9 +41,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
     {
         UpdateVolume();
         UpdateNotes();
-        float scaleValue = Mathf.Lerp(1.0f, 1.2f, rmsValue / 0.3f);
-        volumeScale.Set(scaleValue, scaleValue, transform.localScale.z);
-        TweenScale.Begin(this.gameObject, tweenDuration, volumeScale);
+		UpdateScale();
     }
 
     void UpdateVolume()
@@ -68,15 +66,23 @@ public class InstrumentDragAndDrop : UIDragDropItem
         {
             return;
         }
-        if (dbValue <= -160)
+        if (dbValue <= -160 && musicNotes.gameObject.activeSelf)
         {
             musicNotes.gameObject.SetActive(false);
         }
-        else if (!musicNotes.gameObject.activeSelf)
+        else
         {
             musicNotes.gameObject.SetActive(true);
         }
     }
+
+	void UpdateScale()
+	{
+		float scaleValue = Mathf.Lerp(1.0f, 1.2f, rmsValue / 0.3f);
+		volumeScale.Set(scaleValue, scaleValue, transform.localScale.z);
+		TweenScale.Begin(this.gameObject, tweenDuration, volumeScale);
+	}
+
     protected override void OnDragDropStart()
     {
         InstrumentEventManager.TriggerInstrumentDrag(this.gameObject);
