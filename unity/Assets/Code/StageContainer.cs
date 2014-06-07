@@ -7,7 +7,7 @@ public class StageContainer : UIDragDropContainer
     private GameObject instrumentOnStage;
 	private float dragColorAlpha = 0.1f;
     private float hasInstrumentColorAlpha = 0.2f;
-    // Use this for initialization
+
     void Start()
     {
         glowSparkle.gameObject.SetActive(false);
@@ -19,20 +19,13 @@ public class StageContainer : UIDragDropContainer
         InstrumentEventManager.Drag -= DragGlow;
     }
 
-	private void SetStartColor(InstrumentDragAndDrop instrument, float mult)
-	{
-		glowSparkle.gameObject.SetActive(true);
-		Color col = instrument.instrumentColor;
-		glowSparkle.startColor = new Color(col.r, col.g, col.b, mult);
-	}
-
     void DragGlow(GameObject instrumentObj)
     {
 		var instrument = instrumentObj.GetComponent<InstrumentDragAndDrop>();
-        if (instrumentOnStage == null || instrument == instrumentOnStage)
+        if (instrumentOnStage == null || instrumentObj == instrumentOnStage)
         {
             instrumentOnStage = null;
-			SetStartColor(instrument, dragColorAlpha);
+			StartSparkle(instrument, dragColorAlpha);
         }
     }
 
@@ -41,7 +34,7 @@ public class StageContainer : UIDragDropContainer
 		var instrument = instrumentObj.GetComponent<InstrumentDragAndDrop>();
         if (container == this.gameObject)
         {
-			SetStartColor(instrument, hasInstrumentColorAlpha);
+			StartSparkle(instrument, hasInstrumentColorAlpha);
             instrumentOnStage = instrumentObj;
         }
         else if (instrumentOnStage != null)
@@ -54,4 +47,20 @@ public class StageContainer : UIDragDropContainer
             glowSparkle.gameObject.SetActive(false);
         }
     }
+	
+	private void StartSparkle(InstrumentDragAndDrop instrument, float mult)
+	{
+		Color col = instrument.instrumentColor;
+		glowSparkle.startColor = new Color(col.r, col.g, col.b, mult);
+		glowSparkle.gameObject.SetActive(true);
+	}
+
+	private static string TS(object o)
+	{
+		if (o == null)
+		{
+			return "<null>";
+		}
+		return o.ToString();
+	}
 }
