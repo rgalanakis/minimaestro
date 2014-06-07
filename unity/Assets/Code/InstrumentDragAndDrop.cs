@@ -22,8 +22,8 @@ public class InstrumentDragAndDrop : UIDragDropItem
     public HighlightManager.InstrumentType instrumentType;
     private Color normalColor = Color.white;
     private Color noHighlightColor = new Color(0.3f, 0.3f, 0.3f, 1.0f);
-	public int notePulseCount = 4;
-	public float notePulseThreshold = 2.2f;
+    public int notePulseCount = 4;
+    public float notePulseThreshold = 2.2f;
 
     protected override void Start()
     {
@@ -44,7 +44,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
     {
         UpdateVolume();
         UpdateNotes();
-		UpdateScale();
+        UpdateScale();
     }
 
     void UpdateVolume()
@@ -75,20 +75,20 @@ public class InstrumentDragAndDrop : UIDragDropItem
         }
         else
         {
-			musicNotes.gameObject.SetActive(true);
-			if (dbValue > notePulseThreshold)
-			{
-				musicNotes.Emit(notePulseCount);
-			}
+            musicNotes.gameObject.SetActive(true);
+            if (dbValue > notePulseThreshold)
+            {
+                musicNotes.Emit(notePulseCount);
+            }
         }
     }
 
-	void UpdateScale()
-	{
-		float scaleValue = Mathf.Lerp(1.0f, 1.2f, rmsValue / 0.3f);
-		volumeScale.Set(scaleValue, scaleValue, transform.localScale.z);
-		TweenScale.Begin(this.gameObject, tweenDuration, volumeScale);
-	}
+    void UpdateScale()
+    {
+        float scaleValue = Mathf.Lerp(1.0f, 1.2f, rmsValue / 0.3f);
+        volumeScale.Set(scaleValue, scaleValue, transform.localScale.z);
+        TweenScale.Begin(this.gameObject, tweenDuration, volumeScale);
+    }
 
     protected override void OnDragDropStart()
     {
