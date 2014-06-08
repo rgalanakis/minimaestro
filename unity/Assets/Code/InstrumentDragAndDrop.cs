@@ -22,6 +22,9 @@ public class InstrumentDragAndDrop : UIDragDropItem
     public HighlightManager.InstrumentType instrumentType;
     private Color normalColor = Color.white;
     private Color noHighlightColor = new Color(0.3f, 0.3f, 0.3f, 1.0f);
+    public int notePulseCount = 4;
+    public float notePulseThreshold = 2.2f;
+
     protected override void Start()
     {
         base.Start();
@@ -33,17 +36,23 @@ public class InstrumentDragAndDrop : UIDragDropItem
 
         musicNotes.gameObject.SetActive(false);
         SetContainerAndUpdate(currentContainer);
-        HighlightEventManager.Highlight += HighlightWithContainer;
-        HighlightEventManager.NoHighlight += NoHightlight;
+        EventManager.Highlight += HighlightWithContainer;
+        EventManager.NoHighlight += NoHightlight;
+        EventManager.SongSwitched += OnSongSwitched;
+    }
+
+    void OnDestroy()
+    {
+        EventManager.Highlight -= HighlightWithContainer;
+        EventManager.NoHighlight -= NoHightlight;
+        EventManager.SongSwitched -= OnSongSwitched;
     }
 
     public void ScaleTweenFinished()
     {
         UpdateVolume();
         UpdateNotes();
-        float scaleValue = Mathf.Lerp(1.0f, 1.2f, rmsValue / 0.3f);
-        volumeScale.Set(scaleValue, scaleValue, transform.localScale.z);
-        TweenScale.Begin(this.gameObject, tweenDuration, volumeScale);
+        UpdateScale();
     }
 
     void UpdateVolume()
@@ -62,24 +71,51 @@ public class InstrumentDragAndDrop : UIDragDropItem
         }
     }
 
+    /// <summary>
+    /// Updates notes.
+    /// If volume is 0 (instrument is offstage), don't do anything.
+    /// If volume is low and instrument is active,
+    /// stop the particle system.
+    /// Otherwise, music is coming from the instrument so
+    /// 1) make sure it is playing and
+    /// 2) emit a burse of particles if the volume is over notePulseThreshold.
+    /// We use Play and Stop on the particle system instead of SetActive,
+    /// because if particles are showing and the particle system is deactivated,
+    /// the particles will flash.
+    /// </summary>
     void UpdateNotes()
     {
         if (audio.volume == 0.0f)
         {
             return;
         }
-        if (dbValue <= -160)
+        if (dbValue <= -160 && musicNotes.gameObject.activeSelf)
         {
-            musicNotes.gameObject.SetActive(false);
+            musicNotes.Stop();
         }
-        else if (!musicNotes.gameObject.activeSelf)
+        else
         {
-            musicNotes.gameObject.SetActive(true);
+            if (!musicNotes.isPlaying)
+            {
+                musicNotes.Play();
+            }
+            if (dbValue > notePulseThreshold)
+            {
+                musicNotes.Emit(notePulseCount);
+            }
         }
     }
+
+    void UpdateScale()
+    {
+        float scaleValue = Mathf.Lerp(1.0f, 1.2f, rmsValue / 0.3f);
+        volumeScale.Set(scaleValue, scaleValue, transform.localScale.z);
+        TweenScale.Begin(this.gameObject, tweenDuration, volumeScale);
+    }
+
     protected override void OnDragDropStart()
     {
-        InstrumentEventManager.TriggerInstrumentDrag(this.gameObject);
+        EventManager.TriggerInstrumentDrag(this.gameObject);
         base.OnDragDropStart();
     }
 
@@ -128,7 +164,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
     {
         currentContainer = targetContainer;
         base.OnDragDropRelease(targetContainer);
-        InstrumentEventManager.TriggerInstrumentDrop(targetContainer.gameObject, this.gameObject);
+        EventManager.TriggerInstrumentDrop(targetContainer.gameObject, this.gameObject);
         if (targetContainer != null)
         {
             if (targetContainer.tag == "stage_grid")
@@ -172,7 +208,10 @@ public class InstrumentDragAndDrop : UIDragDropItem
             currentContainer.GetComponent<UISprite>().depth = normalDepth - 1;
             startingContainer.GetComponent<UISprite>().depth = normalDepth - 1;
         }
-
     }
 
+    void OnSongSwitched(SongObject song)
+    {
+        musicNotes.Clear();
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MusicManager : MonoBehaviour
 {
@@ -18,15 +19,19 @@ public class MusicManager : MonoBehaviour
     public AudioSource drums;
     public AudioSource horn;
 
-    public SongObject currentSongPlaying;
-
     public SongObject valkyrie;
     public SongObject spring;
 
+    private SongObject[] songs;
+    private IEnumerator songEnumerator;
+
     void Start()
     {
+        songs = new SongObject[]{valkyrie, spring};
         UIEventListener.Get(playButton).onClick += OnButtonPlay;
         UIEventListener.Get(demoButton).onClick += OnButtonDemo;
+        songEnumerator = EnumerateSongs().GetEnumerator();
+        SwitchSong();
     }
 
     void OnDestroy()
@@ -35,22 +40,36 @@ public class MusicManager : MonoBehaviour
         NGUIHelper.RemoveClickEventListener(demoButton, OnButtonDemo);
     }
 
+    private IEnumerable<SongObject> EnumerateSongs()
+    {
+        while (true)
+        {
+            foreach (var song in songs)
+            {
+                yield return song;
+            }
+        }
+    }
+
+    private SongObject NextSong()
+    {
+        songEnumerator.MoveNext();
+        return (SongObject)songEnumerator.Current;
+    }
+
     void OnButtonPlay(GameObject go)
     {
-        if (currentSongPlaying == valkyrie)
-        {
-            SwitchSong(spring);
-            currentSongPlaying = spring;
-        } else
-        {
-            SwitchSong(valkyrie);
-            currentSongPlaying = valkyrie;
-        }
+        SwitchSong();
     }
 
     void OnButtonDemo(GameObject go)
     {
         
+    }
+
+    void SwitchSong()
+    {
+        SwitchSong(NextSong());
     }
 
     void SwitchSong(SongObject newSong)
@@ -79,5 +98,6 @@ public class MusicManager : MonoBehaviour
         drums.Play();
         horn.Play();
 
+        EventManager.TriggerSongSwitch(newSong);
     }
 }

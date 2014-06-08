@@ -28,8 +28,8 @@ public class HighlightManager : MonoBehaviour
         UIEventListener.Get(stringButton).onClick += OnButtonClick;
         UIEventListener.Get(brassButton).onClick += OnButtonClick;
         UIEventListener.Get(percussionButton).onClick += OnButtonClick;
-		HighlightEventManager.Highlight += OnHighlightOn;
-		HighlightEventManager.NoHighlight += OnHighlightOff;
+		EventManager.Highlight += OnHighlightOn;
+		EventManager.NoHighlight += OnHighlightOff;
 	}
 
     void OnDestroy()
@@ -38,8 +38,8 @@ public class HighlightManager : MonoBehaviour
         NGUIHelper.RemoveClickEventListener(stringButton, OnButtonClick);
         NGUIHelper.RemoveClickEventListener(brassButton, OnButtonClick);
         NGUIHelper.RemoveClickEventListener(percussionButton, OnButtonClick);
-		HighlightEventManager.Highlight -= OnHighlightOn;
-		HighlightEventManager.NoHighlight -= OnHighlightOff;
+		EventManager.Highlight -= OnHighlightOn;
+		EventManager.NoHighlight -= OnHighlightOff;
     }
 
     void Update()
@@ -48,7 +48,7 @@ public class HighlightManager : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                HighlightEventManager.TriggerInstrumentNoHighlight();
+                EventManager.TriggerInstrumentNoHighlight();
             }
         }
     }
@@ -86,8 +86,7 @@ public class HighlightManager : MonoBehaviour
 			System.Diagnostics.Debug.Assert(go == percussionButton);
             it = InstrumentType.Percussion;
         }
-		HighlightEventManager.TriggerInstrumentHighlight(it);
-       
+		EventManager.TriggerInstrumentHighlight(it);
     }
 
 }
