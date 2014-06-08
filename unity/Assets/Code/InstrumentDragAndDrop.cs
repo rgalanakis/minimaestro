@@ -36,8 +36,8 @@ public class InstrumentDragAndDrop : UIDragDropItem
 
         musicNotes.gameObject.SetActive(false);
         SetContainerAndUpdate(currentContainer);
-        HighlightEventManager.Highlight += HighlightWithContainer;
-        HighlightEventManager.NoHighlight += NoHightlight;
+        EventManager.Highlight += HighlightWithContainer;
+        EventManager.NoHighlight += NoHightlight;
     }
 
     public void ScaleTweenFinished()
@@ -92,7 +92,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
 
     protected override void OnDragDropStart()
     {
-        InstrumentEventManager.TriggerInstrumentDrag(this.gameObject);
+        EventManager.TriggerInstrumentDrag(this.gameObject);
         base.OnDragDropStart();
     }
 
@@ -141,7 +141,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
     {
         currentContainer = targetContainer;
         base.OnDragDropRelease(targetContainer);
-        InstrumentEventManager.TriggerInstrumentDrop(targetContainer.gameObject, this.gameObject);
+        EventManager.TriggerInstrumentDrop(targetContainer.gameObject, this.gameObject);
         if (targetContainer != null)
         {
             if (targetContainer.tag == "stage_grid")

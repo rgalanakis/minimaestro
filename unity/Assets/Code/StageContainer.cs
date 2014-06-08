@@ -13,15 +13,15 @@ public class StageContainer : UIDragDropContainer
         // We have these disabled in the editor, enable them here.
         glowSparkle.gameObject.SetActive(true);
         StopSparkle();
-        InstrumentEventManager.Drag += DragGlow;
-        InstrumentEventManager.Drop += DropInstrument;
-        HighlightEventManager.Highlight += HighlightWithContainer;
-        HighlightEventManager.NoHighlight += NoHightlight;
+        EventManager.Drag += DragGlow;
+        EventManager.Drop += DropInstrument;
+        EventManager.Highlight += HighlightWithContainer;
+        EventManager.NoHighlight += NoHightlight;
     }
 
     void OnDestroy()
     {
-        InstrumentEventManager.Drag -= DragGlow;
+        EventManager.Drag -= DragGlow;
     }
 
     void DragGlow(GameObject instrumentObj)
