@@ -41,6 +41,13 @@ public class InstrumentDragAndDrop : UIDragDropItem
         EventManager.SongSwitched += OnSongSwitched;
     }
 
+    void OnDestroy()
+    {
+        EventManager.Highlight -= HighlightWithContainer;
+        EventManager.NoHighlight -= NoHightlight;
+        EventManager.SongSwitched -= OnSongSwitched;
+    }
+
     public void ScaleTweenFinished()
     {
         UpdateVolume();
