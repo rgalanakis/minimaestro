@@ -97,5 +97,7 @@ public class MusicManager : MonoBehaviour
         clarinet.Play();
         drums.Play();
         horn.Play();
+
+        EventManager.TriggerSongSwitch(newSong);
     }
 }

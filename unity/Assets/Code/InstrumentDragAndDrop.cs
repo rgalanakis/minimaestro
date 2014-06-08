@@ -38,6 +38,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
         SetContainerAndUpdate(currentContainer);
         EventManager.Highlight += HighlightWithContainer;
         EventManager.NoHighlight += NoHightlight;
+        EventManager.SongSwitched += OnSongSwitched;
     }
 
     public void ScaleTweenFinished()
@@ -200,7 +201,10 @@ public class InstrumentDragAndDrop : UIDragDropItem
             currentContainer.GetComponent<UISprite>().depth = normalDepth - 1;
             startingContainer.GetComponent<UISprite>().depth = normalDepth - 1;
         }
-
     }
 
+    void OnSongSwitched(SongObject song)
+    {
+        musicNotes.Clear();
+    }
 }

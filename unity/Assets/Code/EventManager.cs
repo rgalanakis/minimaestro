@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class EventManager
+public class EventManager : MonoBehaviour
 {
     #region Highlight Events
 
@@ -54,4 +54,15 @@ public class EventManager
     }
 
     #endregion
+
+    public delegate void SongSwitchEvent(SongObject song);
+    public static event SongSwitchEvent SongSwitched;
+
+    public static void TriggerSongSwitch(SongObject song)
+    {
+        if (SongSwitched != null)
+        {
+            SongSwitched(song);
+        }
+    }
 }
