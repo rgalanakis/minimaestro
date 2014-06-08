@@ -63,6 +63,18 @@ public class InstrumentDragAndDrop : UIDragDropItem
         }
     }
 
+    /// <summary>
+    /// Updates notes.
+    /// If volume is 0 (instrument is offstage), don't do anything.
+    /// If volume is low and instrument is active,
+    /// stop the particle system.
+    /// Otherwise, music is coming from the instrument so
+    /// 1) make sure it is playing and
+    /// 2) emit a burse of particles if the volume is over notePulseThreshold.
+    /// We use Play and Stop on the particle system instead of SetActive,
+    /// because if particles are showing and the particle system is deactivated,
+    /// the particles will flash.
+    /// </summary>
     void UpdateNotes()
     {
         if (audio.volume == 0.0f)
@@ -71,11 +83,14 @@ public class InstrumentDragAndDrop : UIDragDropItem
         }
         if (dbValue <= -160 && musicNotes.gameObject.activeSelf)
         {
-            musicNotes.gameObject.SetActive(false);
+            musicNotes.Stop();
         }
         else
         {
-            musicNotes.gameObject.SetActive(true);
+            if (!musicNotes.isPlaying)
+            {
+                musicNotes.Play();
+            }
             if (dbValue > notePulseThreshold)
             {
                 musicNotes.Emit(notePulseCount);
