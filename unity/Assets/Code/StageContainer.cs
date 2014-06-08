@@ -22,6 +22,9 @@ public class StageContainer : UIDragDropContainer
     void OnDestroy()
     {
         EventManager.Drag -= DragGlow;
+        EventManager.Drop -= DropInstrument;
+        EventManager.Highlight -= HighlightWithContainer;
+        EventManager.NoHighlight -= NoHightlight;
     }
 
     void DragGlow(GameObject instrumentObj)
