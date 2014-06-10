@@ -5,8 +5,8 @@ public class StageContainer : UIDragDropContainer
 {
     public ParticleSystem glowSparkle;
     private GameObject instrumentOnStage;
-    private float dragColorAlpha = 0.1f;
-    private float hasInstrumentColorAlpha = 0.2f;
+    private float dragColorAlpha = 0.3f;
+    private float hasInstrumentColorAlpha = 0.5f;
     private Color defaultColor = new Color(1f, 1f, 1f, 0.02f);
     void Start()
     {

@@ -17,7 +17,7 @@ Properties
 Category
 {
 	Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" }
-	Blend SrcAlpha One
+	Blend SrcAlpha OneMinusSrcAlpha
 	Cull Off Lighting Off ZWrite Off Fog { Color (0,0,0,0) }
 	
 	BindChannels
