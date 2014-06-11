@@ -31,7 +31,7 @@ public class MusicManager : MonoBehaviour
         UIEventListener.Get(playButton).onClick += OnButtonPlay;
         UIEventListener.Get(demoButton).onClick += OnButtonDemo;
         songEnumerator = EnumerateSongs().GetEnumerator();
-        SwitchSong();
+        SwitchSong(false);
     }
 
     void OnDestroy()
@@ -59,20 +59,20 @@ public class MusicManager : MonoBehaviour
 
     void OnButtonPlay(GameObject go)
     {
-        SwitchSong();
+        SwitchSong(false);
     }
 
     void OnButtonDemo(GameObject go)
     {
-        
+        SwitchSong(true);
     }
 
-    void SwitchSong()
+    void SwitchSong(bool demo)
     {
-        SwitchSong(NextSong());
+        SwitchSong(NextSong(), demo);
     }
 
-    void SwitchSong(SongObject newSong)
+    void SwitchSong(SongObject newSong, bool demo)
     {
         xylophone.clip = newSong.xylophone;
         violin.clip = newSong.violin;
@@ -99,5 +99,10 @@ public class MusicManager : MonoBehaviour
         horn.Play();
 
         EventManager.TriggerSongSwitch(newSong);
+
+        if (demo && newSong.demo != null)
+        {
+            EventManager.TriggerDemoSongStart(newSong.demo.instruments, newSong.demo.stageCointainers);
+        }
     }
 }

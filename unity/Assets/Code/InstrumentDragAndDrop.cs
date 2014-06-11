@@ -39,6 +39,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
         EventManager.Highlight += HighlightWithContainer;
         EventManager.NoHighlight += NoHightlight;
         EventManager.SongSwitched += OnSongSwitched;
+        EventManager.DemoSongStart += OnDemoStart;
     }
 
     void OnDestroy()
@@ -46,6 +47,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
         EventManager.Highlight -= HighlightWithContainer;
         EventManager.NoHighlight -= NoHightlight;
         EventManager.SongSwitched -= OnSongSwitched;
+        EventManager.DemoSongStart -= OnDemoStart;
     }
 
     public void ScaleTweenFinished()
@@ -213,5 +215,19 @@ public class InstrumentDragAndDrop : UIDragDropItem
     void OnSongSwitched(SongObject song)
     {
         musicNotes.Clear();
+    }
+
+    void OnDemoStart(InstrumentDragAndDrop[] instruments, StageContainer[] stageContainers)
+    {
+        for (int i = 0; i < instruments.Length; i++)
+        {
+            if (instruments [i] == this)
+            {
+                SetContainerAndUpdate(stageContainers [i].gameObject);
+                return;
+            }
+        }
+
+        SetContainerAndUpdate(startingContainer);
     }
 }

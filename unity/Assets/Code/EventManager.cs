@@ -53,6 +53,7 @@ public class EventManager : MonoBehaviour
         }
     }
 
+
     #endregion
 
     public delegate void SongSwitchEvent(SongObject song);
@@ -63,6 +64,17 @@ public class EventManager : MonoBehaviour
         if (SongSwitched != null)
         {
             SongSwitched(song);
+        }
+    }
+
+    public delegate void DemoSongStartEvent(InstrumentDragAndDrop[] instruments,StageContainer[] stageContainers);
+    public static event DemoSongStartEvent DemoSongStart;
+
+    public static void TriggerDemoSongStart(InstrumentDragAndDrop[] instruments, StageContainer[] stageContainers)
+    {
+        if (DemoSongStart != null)
+        {
+            DemoSongStart(instruments, stageContainers);
         }
     }
 }

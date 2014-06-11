@@ -14,5 +14,5 @@ public class SongObject : MonoBehaviour
     public AudioClip clarinet;
     public AudioClip drums;
     public AudioClip horn;
-   
+    public DemoSongObject demo;
 }
