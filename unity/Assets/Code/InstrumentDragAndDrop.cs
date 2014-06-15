@@ -22,7 +22,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
     public HighlightManager.InstrumentType instrumentType;
     private Color normalColor = Color.white;
     private Color noHighlightColor = new Color(0.3f, 0.3f, 0.3f, 1.0f);
-    public int notePulseCount = 4;
+    public int notePulseCount = 3;
     public float notePulseThreshold = 2.2f;
 
     protected override void Start()
