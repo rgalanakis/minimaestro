@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class MusicManager : MonoBehaviour
 {
+    public UILabel songNameLabel;
     public GameObject playButton;
     public GameObject demoButton;
 
@@ -88,8 +89,16 @@ public class MusicManager : MonoBehaviour
         demoButton.collider.enabled = true;
     }
 
+    void DisplayAndFadeSongName(string songName)
+    {
+        songNameLabel.text = songName;
+        songNameLabel.alpha = 1.0f;
+        TweenAlpha.Begin(songNameLabel.gameObject, 3.0f, 0.0f);
+    }
     void SwitchSong(SongObject newSong, bool demo)
     {
+        DisplayAndFadeSongName(newSong.displayName);
+
         xylophone.clip = newSong.xylophone;
         violin.clip = newSong.violin;
         tuba.clip = newSong.tuba;

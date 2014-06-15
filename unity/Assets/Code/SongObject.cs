@@ -15,4 +15,5 @@ public class SongObject : MonoBehaviour
     public AudioClip drums;
     public AudioClip horn;
     public DemoSongObject demo;
+    public string displayName;
 }
