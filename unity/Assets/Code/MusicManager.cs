@@ -32,12 +32,16 @@ public class MusicManager : MonoBehaviour
         UIEventListener.Get(demoButton).onClick += OnButtonDemo;
         songEnumerator = EnumerateSongs().GetEnumerator();
         SwitchSong(false);
+        EventManager.Highlight += OnHighlightOn;
+        EventManager.NoHighlight += OnHighlightOff;
     }
 
     void OnDestroy()
     {
         NGUIHelper.RemoveClickEventListener(playButton, OnButtonPlay);
         NGUIHelper.RemoveClickEventListener(demoButton, OnButtonDemo);
+        EventManager.Highlight -= OnHighlightOn;
+        EventManager.NoHighlight -= OnHighlightOff;
     }
 
     private IEnumerable<SongObject> EnumerateSongs()
@@ -70,6 +74,18 @@ public class MusicManager : MonoBehaviour
     void SwitchSong(bool demo)
     {
         SwitchSong(NextSong(), demo);
+    }
+
+    void OnHighlightOn(HighlightManager.InstrumentType instrumentType)
+    {       
+        playButton.collider.enabled = false;
+        demoButton.collider.enabled = false;
+    }
+    
+    void OnHighlightOff()
+    {
+        playButton.collider.enabled = true;
+        demoButton.collider.enabled = true;
     }
 
     void SwitchSong(SongObject newSong, bool demo)
