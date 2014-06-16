@@ -25,7 +25,7 @@ Shader "echoLogin/Transparent/10-Fastest"
 	//=========================================================================
 	SubShader 
 	{
-		Tags { "Queue"="Transparent+1" "IgnoreProjector"="False" "RenderType"="Transparent" }
+		Tags { "Queue"="Transparent+100" "IgnoreProjector"="False" "RenderType"="Transparent" }
 
     	Pass 
 		{    
