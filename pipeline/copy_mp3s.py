@@ -3,16 +3,19 @@ import argparse
 import os
 import subprocess
 import sys
+import tempfile
 import threading
 
 import symphony
 
 
 def parse():
-    p = argparse.ArgumentParser(usage='copy_mp3s.py scorename')
+    p = argparse.ArgumentParser(usage='copy_mp3s.py scorename length')
     p.add_argument('--test', action='store_true', help='Internal use.')
     p.add_argument(
         'songname', help='Name of the song inside the source_Music folder.')
+    p.add_argument(
+        'length', type=int, help='Length of the result in seconds.')
     return p.parse_args()
 
 
@@ -38,9 +41,7 @@ _stdout_happening = False
 _stdout_lock = threading.Lock()
 
 
-def compress(src, tgt):
-    opts = ['-m', 'm', '-V', '9', '-h']
-    cmdline = ['lame'] + opts + [src, tgt]
+def _trap_stdout(cmdline):
     global _stdout_happening
     with _stdout_lock:
         i_am_stdout = False
@@ -52,6 +53,24 @@ def compress(src, tgt):
     subprocess.check_call(cmdline, stderr=stdout)
     if i_am_stdout:
         _stdout_happening = False
+
+tempd = tempfile.mkdtemp()
+
+
+def compress(src, tgt, length):
+    basename = os.path.basename(src)
+    purename, ext = os.path.splitext(basename)
+    split_cmdline = ['mp3splt', '-d', tempd, '-o', purename, src, '0.0', '0.%s' % length]
+    _trap_stdout(split_cmdline)
+    abstemp = os.path.join(tempd, purename + ext)
+    assert os.path.isfile(abstemp)
+
+    lame_opts = ['-m', 'm', '-V', '9', '-h']
+    lame_cmdline = ['lame'] + lame_opts + [abstemp, tgt]
+    if not os.path.exists(os.path.dirname(tgt)):
+        os.makedirs(os.path.dirname(tgt))
+    _trap_stdout(lame_cmdline)
+    os.remove(abstemp)
 
 
 def get_srcdir(songname):
@@ -77,7 +96,7 @@ def main():
         del src_and_tgts[1:]
     symphony.say('Compressing/copying %s music files to %s.',
                  len(src_and_tgts), tgtdir)
-    symphony.pmap(lambda a: compress(a[0], a[1]), src_and_tgts)
+    symphony.pmap(lambda a: compress(a[0], a[1], opts.length), src_and_tgts)
     symphony.say('Finished copying %s files.' % len(src_and_tgts))
 
 
