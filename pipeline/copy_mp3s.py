@@ -14,8 +14,7 @@ def parse():
     p.add_argument('--test', action='store_true', help='Internal use.')
     p.add_argument(
         'songname', help='Name of the song inside the source_Music folder.')
-    p.add_argument(
-        'length', type=int, help='Length of the result in seconds.')
+    p.add_argument('length', help='Length of the result in mp3splt (<m>.<s>).')
     return p.parse_args()
 
 
@@ -60,7 +59,7 @@ tempd = tempfile.mkdtemp()
 def compress(src, tgt, length):
     basename = os.path.basename(src)
     purename, ext = os.path.splitext(basename)
-    split_cmdline = ['mp3splt', '-d', tempd, '-o', purename, src, '0.0', '0.%s' % length]
+    split_cmdline = ['mp3splt', '-d', tempd, '-o', purename, src, '0.0', length]
     _trap_stdout(split_cmdline)
     abstemp = os.path.join(tempd, purename + ext)
     assert os.path.isfile(abstemp)
