@@ -20,15 +20,11 @@ public class MusicManager : MonoBehaviour
     public AudioSource drums;
     public AudioSource horn;
 
-    public SongObject valkyrie;
-    public SongObject spring;
-
-    private SongObject[] songs;
+    public SongObject[] songs;
     private IEnumerator songEnumerator;
 
     void Start()
     {
-        songs = new SongObject[]{valkyrie, spring};
         UIEventListener.Get(playButton).onClick += OnButtonPlay;
         UIEventListener.Get(demoButton).onClick += OnButtonDemo;
         songEnumerator = EnumerateSongs().GetEnumerator();
