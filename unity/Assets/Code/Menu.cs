@@ -4,10 +4,22 @@ using System.Collections;
 public class Menu : MonoBehaviour
 {
     public GameObject menuButton;
-
-    void Start()
+    public GameObject menuGroup;
+    public GameObject facebookButton;
+    public GameObject twitterButton;
+    public GameObject reviewButton;
+    public UISprite background;
+    public Vector3 hidePosition = new Vector3(-1030, 0, 0);
+    bool leftApp = false;
+    void Awake()
     {
+        HideMenu(null);
         UIEventListener.Get(menuButton).onClick += OnButtonPressMenu;
+        UIEventListener.Get(facebookButton).onClick += OnFacebookPress;
+        UIEventListener.Get(twitterButton).onClick += OnTwitterPress;
+        UIEventListener.Get(reviewButton).onClick += OnReviewPress;
+        UIEventListener.Get(background.gameObject).onClick += HideMenu;
+
     }
     
     void OnDestroy()
@@ -17,12 +29,60 @@ public class Menu : MonoBehaviour
         
     void OnButtonPressMenu(GameObject go)
     {
-        LoadMenuScene();
+        if (menuGroup.gameObject.transform.position.x == 0)
+        {
+            HideMenu(null);
+        }
+        else
+        {
+            ShowMenu();
+        }
     }
 
-    void LoadMenuScene()
+    void OnReviewPress(GameObject go)
     {
-        Application.LoadLevel("menu");
+        if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            return;
+        }
+        
+        UniRate.Instance.RateIfNetworkAvailable();
+    }
+
+    IEnumerator OpenSocialPage(string appUrl, string browserUrl)
+    {
+        Application.OpenURL(appUrl);
+        yield return new WaitForSeconds(1);
+        if (leftApp)
+        {
+            leftApp = false;
+        }
+        else
+        {
+            Application.OpenURL(browserUrl);
+        }
+    }
+
+    void OnFacebookPress(GameObject go)
+    {
+        StartCoroutine(OpenSocialPage("fb://profile/443299165761335", "https://www.facebook.com/SteadfastGames")); 
+    }
+
+    void OnTwitterPress(GameObject go)
+    {
+        StartCoroutine(OpenSocialPage("twitter:///user?screen_name=SteadfastGame", "https://twitter.com/SteadfastGame"));
+    }
+
+    void ShowMenu()
+    {
+        EventManager.TriggerPause();
+        TweenPosition.Begin(menuGroup, 0.4f, Vector3.zero);
+    }
+
+    void HideMenu(GameObject go)
+    {
+        EventManager.TriggerResume();
+        TweenPosition.Begin(menuGroup, 0.4f, hidePosition);
     }
 
 }

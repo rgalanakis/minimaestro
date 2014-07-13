@@ -40,6 +40,8 @@ public class InstrumentDragAndDrop : UIDragDropItem
         EventManager.NoHighlight += NoHightlight;
         EventManager.SongSwitched += OnSongSwitched;
         EventManager.DemoSongStart += OnDemoStart;
+        EventManager.Pause += OnPause;
+        EventManager.Resume += OnResume;
     }
 
     void OnDestroy()
@@ -48,6 +50,8 @@ public class InstrumentDragAndDrop : UIDragDropItem
         EventManager.NoHighlight -= NoHightlight;
         EventManager.SongSwitched -= OnSongSwitched;
         EventManager.DemoSongStart -= OnDemoStart;
+        EventManager.Pause -= OnPause;
+        EventManager.Resume -= OnResume;
     }
 
     public void ScaleTweenFinished()
@@ -105,6 +109,19 @@ public class InstrumentDragAndDrop : UIDragDropItem
             {
                 musicNotes.Emit(notePulseCount);
             }
+        }
+    }
+
+    void OnPause()
+    {
+        musicNotes.gameObject.SetActive(false);
+    }
+
+    void OnResume()
+    {
+        if (currentContainer.tag == "stage_grid")
+        {
+            musicNotes.gameObject.SetActive(true);
         }
     }
 

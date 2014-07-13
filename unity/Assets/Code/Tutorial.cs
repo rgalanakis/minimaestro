@@ -12,6 +12,8 @@ public class Tutorial : MonoBehaviour
     void Awake()
     {
         account.CompletedTutorialEvent += CompletedTutorial;
+        EventManager.Pause += OnPause;
+        EventManager.Resume += OnResume;
         if (!AccountSettings.completedTutorial)
         {
             EventDelegate.Add(TweenPosition.Begin(hand, duration, endPosition).onFinished, TweenEndFinished, true);
@@ -19,12 +21,13 @@ public class Tutorial : MonoBehaviour
     }
     void OnDestroy()
     {
+        EventManager.Pause -= OnPause;
+        EventManager.Resume -= OnResume;
         account.CompletedTutorialEvent -= CompletedTutorial;
     }
     public void TweenEndFinished()
     {
         TweenHide();
-        // Invoke("TweenHide", 0.1f);
     }
 
     public void TweenHide()
@@ -50,5 +53,24 @@ public class Tutorial : MonoBehaviour
     public void CompletedTutorial()
     {
         hand.SetActive(false);
+    }
+
+    void OnPause()
+    {
+        EnableTweens(false);
+    }
+
+    void OnResume()
+    {
+        EnableTweens(true);
+    }
+
+    void EnableTweens(bool enabled)
+    {
+        UITweener[] tweens = hand.GetComponents<UITweener>();
+        foreach (UITweener tween in tweens)
+        {
+            tween.enabled = enabled;
+        }
     }
 }

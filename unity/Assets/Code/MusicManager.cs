@@ -31,6 +31,8 @@ public class MusicManager : MonoBehaviour
         SwitchSong(false);
         EventManager.Highlight += OnHighlightOn;
         EventManager.NoHighlight += OnHighlightOff;
+        EventManager.Pause += PauseInstruments;
+        EventManager.Resume += PlayInstruments;
     }
 
     void OnDestroy()
@@ -107,6 +109,33 @@ public class MusicManager : MonoBehaviour
         drums.clip = newSong.drums;
         horn.clip = newSong.horn;
 
+        PlayInstruments();
+
+        EventManager.TriggerSongSwitch(newSong);
+
+        if (demo && newSong.demo != null)
+        {
+            EventManager.TriggerDemoSongStart(newSong.demo.instruments, newSong.demo.stageCointainers);
+        }
+    }
+
+    void PauseInstruments()
+    {
+        xylophone.Pause();
+        violin.Pause();
+        tuba.Pause();
+        cymbals.Pause();
+        harp.Pause();
+        flute.Pause();
+        trumpet.Pause();
+        piano.Pause();
+        clarinet.Pause();
+        drums.Pause();
+        horn.Pause();
+    }
+
+    void PlayInstruments()
+    {
         xylophone.Play();
         violin.Play();
         tuba.Play();
@@ -118,12 +147,5 @@ public class MusicManager : MonoBehaviour
         clarinet.Play();
         drums.Play();
         horn.Play();
-
-        EventManager.TriggerSongSwitch(newSong);
-
-        if (demo && newSong.demo != null)
-        {
-            EventManager.TriggerDemoSongStart(newSong.demo.instruments, newSong.demo.stageCointainers);
-        }
     }
 }

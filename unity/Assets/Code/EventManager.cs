@@ -77,4 +77,22 @@ public class EventManager : MonoBehaviour
             DemoSongStart(instruments, stageContainers);
         }
     }
+
+    public static event Action Pause;
+    public static void TriggerPause()
+    {
+        if (Pause != null)
+        {
+            Pause();
+        }
+    }
+
+    public static Action Resume;
+    public static void TriggerResume()
+    {
+        if (Resume != null)
+        {
+            Resume();
+        }
+    }
 }
