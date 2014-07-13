@@ -89,12 +89,20 @@ public class MusicManager : MonoBehaviour
 
     void DisplayAndFadeSongName(string songName)
     {
+        TweenScale.Begin(songNameLabel.gameObject, 0.0f, Vector3.zero);
+        TweenScale.Begin(songNameLabel.gameObject, 0.5f, Vector3.one);
         songNameLabel.text = songName;
         songNameLabel.alpha = 1.0f;
-        TweenAlpha.Begin(songNameLabel.gameObject, 3.0f, 0.0f);
+        Invoke("AlphaSongName", 2.5f);
+    }
+    void AlphaSongName()
+    {
+        //songNameLabel.effectStyle = UILabel.Effect.None;
+        TweenScale.Begin(songNameLabel.gameObject, 0.5f, Vector3.zero);
     }
     void SwitchSong(SongObject newSong, bool demo)
     {
+        CancelInvoke();
         DisplayAndFadeSongName(newSong.displayName);
 
         xylophone.clip = newSong.xylophone;
