@@ -39,6 +39,17 @@ public abstract class UIRect : MonoBehaviour
 		}
 
 		/// <summary>
+		/// Convenience function that sets the anchor's values.
+		/// </summary>
+
+		public void Set (Transform target, float relative, float absolute)
+		{
+			this.target = target;
+			this.relative = relative;
+			this.absolute = Mathf.FloorToInt(absolute + 0.5f);
+		}
+
+		/// <summary>
 		/// Set the anchor's value to the nearest of the 3 possible choices of (left, center, right) or (bottom, center, top).
 		/// </summary>
 
@@ -310,7 +321,15 @@ public abstract class UIRect : MonoBehaviour
 	{
 		if (anchorCamera != null)
 		{
-			return anchorCamera.GetSides(relativeTo);
+			Vector3[] sides = anchorCamera.GetSides(relativeTo);
+			UIRoot rt = root;
+
+			if (rt != null)
+			{
+				float adjustment = rt.pixelSizeAdjustment;
+				for (int i = 0; i < 4; ++i) sides[i] *= adjustment;
+			}
+			return sides;
 		}
 		else
 		{
@@ -350,9 +369,11 @@ public abstract class UIRect : MonoBehaviour
 	protected virtual void OnEnable ()
 	{
 		mAnchorsCached = false;
+		mUpdateFrame = -1;
 		if (updateAnchors == AnchorUpdate.OnEnable)
 			mUpdateAnchors = true;
 		if (mStarted) OnInit();
+		mUpdateFrame = -1;
 #if UNITY_EDITOR
 		OnValidate();
 #endif
@@ -554,6 +575,12 @@ public abstract class UIRect : MonoBehaviour
 
 		mUpdateAnchors = true;
 	}
+
+	/// <summary>
+	/// Convenience method that resets and updates the anchors, all at once.
+	/// </summary>
+
+	public void ResetAndUpdateAnchors () { ResetAnchors(); UpdateAnchors(); }
 
 	/// <summary>
 	/// Set the rectangle manually.

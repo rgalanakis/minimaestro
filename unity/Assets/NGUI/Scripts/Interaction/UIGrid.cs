@@ -14,106 +14,106 @@ using System.Collections.Generic;
 [AddComponentMenu("NGUI/Interaction/Grid")]
 public class UIGrid : UIWidgetContainer
 {
-    public delegate void OnReposition();
+	public delegate void OnReposition ();
 
-    public enum Arrangement
-    {
-        Horizontal,
-        Vertical,
-    }
+	public enum Arrangement
+	{
+		Horizontal,
+		Vertical,
+	}
 
-    public enum Sorting
-    {
-        None,
-        Alphabetic,
-        Horizontal,
-        Vertical,
-        Custom,
-    }
+	public enum Sorting
+	{
+		None,
+		Alphabetic,
+		Horizontal,
+		Vertical,
+		Custom,
+	}
 
-    /// <summary>
-    /// Type of arrangement -- vertical or horizontal.
-    /// </summary>
+	/// <summary>
+	/// Type of arrangement -- vertical or horizontal.
+	/// </summary>
 
-    public Arrangement arrangement = Arrangement.Horizontal;
+	public Arrangement arrangement = Arrangement.Horizontal;
 
-    /// <summary>
-    /// How to sort the grid's elements.
-    /// </summary>
+	/// <summary>
+	/// How to sort the grid's elements.
+	/// </summary>
 
-    public Sorting sorting = Sorting.None;
+	public Sorting sorting = Sorting.None;
 
-    /// <summary>
-    /// Final pivot point for the grid's content.
-    /// </summary>
+	/// <summary>
+	/// Final pivot point for the grid's content.
+	/// </summary>
 
-    public UIWidget.Pivot pivot = UIWidget.Pivot.TopLeft;
+	public UIWidget.Pivot pivot = UIWidget.Pivot.TopLeft;
 
-    /// <summary>
-    /// Maximum children per line.
-    /// If the arrangement is horizontal, this denotes the number of columns.
-    /// If the arrangement is vertical, this stands for the number of rows.
-    /// </summary>
+	/// <summary>
+	/// Maximum children per line.
+	/// If the arrangement is horizontal, this denotes the number of columns.
+	/// If the arrangement is vertical, this stands for the number of rows.
+	/// </summary>
 
-    public int maxPerLine = 0;
+	public int maxPerLine = 0;
 
-    /// <summary>
-    /// The width of each of the cells.
-    /// </summary>
+	/// <summary>
+	/// The width of each of the cells.
+	/// </summary>
 
-    public float cellWidth = 200f;
+	public float cellWidth = 200f;
 
-    /// <summary>
-    /// The height of each of the cells.
-    /// </summary>
+	/// <summary>
+	/// The height of each of the cells.
+	/// </summary>
 
-    public float cellHeight = 200f;
+	public float cellHeight = 200f;
 
-    /// <summary>
-    /// Whether the grid will smoothly animate its children into the correct place.
-    /// </summary>
+	/// <summary>
+	/// Whether the grid will smoothly animate its children into the correct place.
+	/// </summary>
 
-    public bool animateSmoothly = false;
+	public bool animateSmoothly = false;
 
-    /// <summary>
-    /// Whether to ignore the disabled children or to treat them as being present.
-    /// </summary>
+	/// <summary>
+	/// Whether to ignore the disabled children or to treat them as being present.
+	/// </summary>
 
-    public bool hideInactive = true;
+	public bool hideInactive = true;
 
-    /// <summary>
-    /// Whether the parent container will be notified of the grid's changes.
-    /// </summary>
+	/// <summary>
+	/// Whether the parent container will be notified of the grid's changes.
+	/// </summary>
 
-    public bool keepWithinPanel = false;
+	public bool keepWithinPanel = false;
 
-    /// <summary>
-    /// Callback triggered when the grid repositions its contents.
-    /// </summary>
+	/// <summary>
+	/// Callback triggered when the grid repositions its contents.
+	/// </summary>
 
-    public OnReposition onReposition;
+	public OnReposition onReposition;
 
-    /// <summary>
-    /// Custom sort delegate, used when the sorting method is set to 'custom'.
-    /// </summary>
+	/// <summary>
+	/// Custom sort delegate, used when the sorting method is set to 'custom'.
+	/// </summary>
 
-    public BetterList<Transform>.CompareFunc onCustomSort;
+#if UNITY_FLASH
+	public System.Comparison<Transform> onCustomSort;
+#else
+	public BetterList<Transform>.CompareFunc onCustomSort;
+#endif
+	// Use the 'sorting' property instead
+	[HideInInspector][SerializeField] bool sorted = false;
 
-    // Use the 'sorting' property instead
-    [HideInInspector]
-    [SerializeField]
-    bool
-        sorted = false;
+	protected bool mReposition = false;
+	protected UIPanel mPanel;
+	protected bool mInitDone = false;
 
-    protected bool mReposition = false;
-    protected UIPanel mPanel;
-    protected bool mInitDone = false;
+	/// <summary>
+	/// Reposition the children on the next Update().
+	/// </summary>
 
-    /// <summary>
-    /// Reposition the children on the next Update().
-    /// </summary>
-
-    public bool repositionNow { set { if (value) { mReposition = true; enabled = true; } } }
+	public bool repositionNow { set { if (value) { mReposition = true; enabled = true; } } }
 
 	/// <summary>
 	/// Get the current list of the grid's children.
@@ -175,13 +175,13 @@ public class UIGrid : UIWidgetContainer
 	{
 		if (trans != null)
 		{
-			BetterList<Transform> list = GetChildList();
-			list.Add(trans);
-			ResetPosition(list);
+			trans.parent = transform;
+			ResetPosition(GetChildList());
 		}
 	}
 
-	/// <summary>
+	// NOTE: This functionality is effectively removed until Unity 4.6.
+	/*/// <summary>
 	/// Convenience method -- add a new child at the specified index.
 	/// Note that if you plan on adding multiple objects, it's faster to GetChildList() and modify that instead.
 	/// </summary>
@@ -216,7 +216,7 @@ public class UIGrid : UIWidgetContainer
 			return t;
 		}
 		return null;
-	}
+	}*/
 
 	/// <summary>
 	/// Remove the specified child from the list.
@@ -361,7 +361,9 @@ public class UIGrid : UIWidgetContainer
 
 			if (animateSmoothly && Application.isPlaying)
 			{
-				SpringPosition.Begin(t.gameObject, pos, 5f).updateScrollView = true;
+				SpringPosition sp = SpringPosition.Begin(t.gameObject, pos, 15f);
+				sp.updateScrollView = true;
+				sp.ignoreTimeScale = true;
 			}
 			else t.localPosition = pos;
 
