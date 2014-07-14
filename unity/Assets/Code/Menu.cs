@@ -45,7 +45,12 @@ public class Menu : MonoBehaviour
         {
             return;
         }
-        
+
+        if (GoogleAnalytics.instance)
+        {
+            GoogleAnalytics.instance.LogScreen("Review Button Clicked");
+        }
+
         UniRate.Instance.RateIfNetworkAvailable();
     }
 
@@ -65,22 +70,39 @@ public class Menu : MonoBehaviour
 
     void OnFacebookPress(GameObject go)
     {
+        if (GoogleAnalytics.instance)
+        {
+            GoogleAnalytics.instance.LogScreen("Facebook Button Clicked");
+        }
+
         StartCoroutine(OpenSocialPage("fb://profile/443299165761335", "https://www.facebook.com/SteadfastGames")); 
     }
 
     void OnTwitterPress(GameObject go)
     {
+        if (GoogleAnalytics.instance)
+        {
+            GoogleAnalytics.instance.LogScreen("Twitter Button Clicked");
+        }
         StartCoroutine(OpenSocialPage("twitter:///user?screen_name=SteadfastGame", "https://twitter.com/SteadfastGame"));
     }
 
     void ShowMenu()
     {
+        if (GoogleAnalytics.instance)
+        {
+            GoogleAnalytics.instance.LogScreen("Show Menu");
+        }
         EventManager.TriggerPause();
         TweenPosition.Begin(menuGroup, 0.4f, Vector3.zero);
     }
 
     void HideMenu(GameObject go)
     {
+        if (GoogleAnalytics.instance)
+        {
+            GoogleAnalytics.instance.LogScreen("Hide Menu");
+        }
         EventManager.TriggerResume();
         TweenPosition.Begin(menuGroup, 0.4f, hidePosition);
     }

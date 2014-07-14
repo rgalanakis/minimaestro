@@ -25,6 +25,13 @@ public class MusicManager : MonoBehaviour
 
     void Start()
     {
+
+        if (GoogleAnalytics.instance)
+        {
+            GoogleAnalytics.instance.LogScreen("Game Start");
+        }
+            
+
         UIEventListener.Get(playButton).onClick += OnButtonPlay;
         UIEventListener.Get(demoButton).onClick += OnButtonDemo;
         songEnumerator = EnumerateSongs().GetEnumerator();
@@ -104,6 +111,19 @@ public class MusicManager : MonoBehaviour
     {
         CancelInvoke();
         DisplayAndFadeSongName(newSong.displayName);
+
+        if (GoogleAnalytics.instance)
+        {
+            if (demo)
+            {
+                GoogleAnalytics.instance.LogScreen("Demo Song Name " + newSong.displayName);
+            }
+            else
+            {
+                GoogleAnalytics.instance.LogScreen("Switch to Song " + newSong.displayName);
+            }
+
+        }
 
         xylophone.clip = newSong.xylophone;
         violin.clip = newSong.violin;
