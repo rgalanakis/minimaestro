@@ -9,11 +9,13 @@ public class Menu : MonoBehaviour
     public GameObject twitterButton;
     public GameObject reviewButton;
     public UISprite background;
-    public Vector3 hidePosition = new Vector3(-1030, 0, 0);
+    private Vector3 hidePosition = new Vector3(-1030, 0, 0);
     bool leftApp = false;
     void Awake()
     {
-        HideMenu(null);
+        hidePosition = new Vector3(-(Screen.width + 10.0f), 0.0f, 0.0f);
+        background.SetDimensions(Screen.width + 15, Screen.height + 15);
+        TweenPosition.Begin(menuGroup, 0.0f, hidePosition);
         UIEventListener.Get(menuButton).onClick += OnButtonPressMenu;
         UIEventListener.Get(facebookButton).onClick += OnFacebookPress;
         UIEventListener.Get(twitterButton).onClick += OnTwitterPress;
