@@ -110,17 +110,17 @@ public class MusicManager : MonoBehaviour
     void SwitchSong(SongObject newSong, bool demo)
     {
         CancelInvoke();
-        DisplayAndFadeSongName(newSong.displayName);
+        DisplayAndFadeSongName(newSong.displayName.Replace("\\n", "\n"));
 
         if (GoogleAnalytics.instance)
         {
             if (demo)
             {
-                GoogleAnalytics.instance.LogScreen("Demo Song Name " + newSong.displayName);
+                GoogleAnalytics.instance.LogScreen("song-demo-" + newSong.songId);
             }
             else
             {
-                GoogleAnalytics.instance.LogScreen("Switch to Song " + newSong.displayName);
+                GoogleAnalytics.instance.LogScreen("song-switch-" + newSong.songId);
             }
 
         }
