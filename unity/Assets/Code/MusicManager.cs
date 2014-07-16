@@ -25,12 +25,7 @@ public class MusicManager : MonoBehaviour
 
     void Start()
     {
-
-        if (GoogleAnalytics.instance)
-        {
-            GoogleAnalytics.instance.LogScreen("Game Start");
-        }
-            
+        GoogleAnalytics.SafeLogScreen("game-start");
 
         UIEventListener.Get(playButton).onClick += OnButtonPlay;
         UIEventListener.Get(demoButton).onClick += OnButtonDemo;
@@ -83,11 +78,11 @@ public class MusicManager : MonoBehaviour
     }
 
     void OnHighlightOn(HighlightManager.InstrumentType instrumentType)
-    {       
+    {   
         playButton.collider.enabled = false;
         demoButton.collider.enabled = false;
     }
-    
+
     void OnHighlightOff()
     {
         playButton.collider.enabled = true;
@@ -112,18 +107,16 @@ public class MusicManager : MonoBehaviour
         CancelInvoke();
         DisplayAndFadeSongName(newSong.displayName.Replace("\\n", "\n"));
 
-        if (GoogleAnalytics.instance)
+        string gaPrefix;
+        if (demo)
         {
-            if (demo)
-            {
-                GoogleAnalytics.instance.LogScreen("song-demo-" + newSong.songId);
-            }
-            else
-            {
-                GoogleAnalytics.instance.LogScreen("song-switch-" + newSong.songId);
-            }
-
+            gaPrefix = "song-demo-";
         }
+        else
+        {
+            gaPrefix = "song-switch-";
+        }
+        GoogleAnalytics.SafeLogScreen(gaPrefix + newSong.songId);
 
         xylophone.clip = newSong.xylophone;
         violin.clip = newSong.violin;

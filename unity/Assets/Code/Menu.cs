@@ -21,12 +21,12 @@ public class Menu : MonoBehaviour
         UIEventListener.Get(background.gameObject).onClick += HideMenu;
 
     }
-    
+
     void OnDestroy()
     {
         NGUIHelper.RemoveClickEventListener(menuButton, OnButtonPressMenu);
     }
-        
+    
     void OnButtonPressMenu(GameObject go)
     {
         if (menuGroup.gameObject.transform.position.x == 0)
@@ -46,10 +46,7 @@ public class Menu : MonoBehaviour
             return;
         }
 
-        if (GoogleAnalytics.instance)
-        {
-            GoogleAnalytics.instance.LogScreen("Review Button Clicked");
-        }
+        GoogleAnalytics.SafeLogScreen("review-btn-clicked");
 
         UniRate.Instance.RateIfNetworkAvailable();
     }
@@ -70,39 +67,26 @@ public class Menu : MonoBehaviour
 
     void OnFacebookPress(GameObject go)
     {
-        if (GoogleAnalytics.instance)
-        {
-            GoogleAnalytics.instance.LogScreen("Facebook Button Clicked");
-        }
-
+        GoogleAnalytics.SafeLogScreen("facebook-btn-clicked");
         StartCoroutine(OpenSocialPage("fb://profile/443299165761335", "https://www.facebook.com/SteadfastGames")); 
     }
 
     void OnTwitterPress(GameObject go)
     {
-        if (GoogleAnalytics.instance)
-        {
-            GoogleAnalytics.instance.LogScreen("Twitter Button Clicked");
-        }
+        GoogleAnalytics.SafeLogScreen("twitter-btn-clicked");
         StartCoroutine(OpenSocialPage("twitter:///user?screen_name=SteadfastGame", "https://twitter.com/SteadfastGame"));
     }
 
     void ShowMenu()
     {
-        if (GoogleAnalytics.instance)
-        {
-            GoogleAnalytics.instance.LogScreen("Show Menu");
-        }
+        GoogleAnalytics.SafeLogScreen("menu-show");
         EventManager.TriggerPause();
         TweenPosition.Begin(menuGroup, 0.4f, Vector3.zero);
     }
 
     void HideMenu(GameObject go)
     {
-        if (GoogleAnalytics.instance)
-        {
-            GoogleAnalytics.instance.LogScreen("Hide Menu");
-        }
+        GoogleAnalytics.SafeLogScreen("menu-hide");
         EventManager.TriggerResume();
         TweenPosition.Begin(menuGroup, 0.4f, hidePosition);
     }

@@ -87,7 +87,7 @@ public class HighlightManager : MonoBehaviour
         }
     }
     void OnHighlightOn(InstrumentType instrumentType)
-    {		
+    {    
         sectionLabel.text = instrumentType.ToString("F");
         sectionLabel.gameObject.SetActive(true);
         blackOverlay.gameObject.SetActive(true);

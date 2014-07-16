@@ -155,16 +155,16 @@ public class InstrumentDragAndDrop : UIDragDropItem
         }
         else if (instrument != null && instrument.currentContainer.tag == "stage_grid")
         { 
-            
+        
             targetContainer = instrument.currentContainer;
-            
+        
             if (this.currentContainer.tag == "stage_grid" && targetContainer.tag == "stage_grid")
             {
                 instrument.SetContainerAndUpdate(this.currentContainer);
                 SetContainerAndUpdate(targetContainer);
                 return;
             }
-            
+        
             instrument.SetContainerAndUpdate(instrument.startingContainer);
             SetContainerAndUpdate(targetContainer);
         }

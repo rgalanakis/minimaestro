@@ -18,7 +18,7 @@ public class NGUIHelper : MonoBehaviour
         {
             return;
         }
-        
+    
         UIEventListener.Get(gameObject).onPress -= listener;
     }
 }

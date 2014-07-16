@@ -19,7 +19,7 @@ public class MenuScreen : MonoBehaviour
         UIEventListener.Get(twitterButton).onClick += OnButtonTwitter;
 
     }
-    
+
     void OnDestroy()
     {
         NGUIHelper.RemoveClickEventListener(playButton, OnButtonPlay);
@@ -40,7 +40,7 @@ public class MenuScreen : MonoBehaviour
         {
             return;
         }
-        
+    
         UniRate.Instance.RateIfNetworkAvailable();
     }
 

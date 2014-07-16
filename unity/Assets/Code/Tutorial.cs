@@ -52,11 +52,7 @@ public class Tutorial : MonoBehaviour
 
     public void CompletedTutorial()
     {
-        if (GoogleAnalytics.instance)
-        {
-            GoogleAnalytics.instance.LogScreen("Tutorial Completed");
-        }
-
+        GoogleAnalytics.SafeLogScreen("tutorial-completed");
         hand.SetActive(false);
     }
 

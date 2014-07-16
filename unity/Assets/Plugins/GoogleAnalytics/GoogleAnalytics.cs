@@ -35,6 +35,14 @@ public class GoogleAnalytics : MonoBehaviour {
 			
 	}
 
+	public static void SafeLogScreen(string title)
+	{
+		if (instance)
+		{
+			instance.LogScreen(title);
+		}
+	}
+
 	public void LogScreen(string title)
 	{
 		
