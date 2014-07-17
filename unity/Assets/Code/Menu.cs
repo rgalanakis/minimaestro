@@ -8,20 +8,24 @@ public class Menu : MonoBehaviour
     public GameObject facebookButton;
     public GameObject twitterButton;
     public GameObject reviewButton;
-    public UISprite background;
+    public UISprite underlay;
     private Vector3 hidePosition = new Vector3(-1030, 0, 0);
     bool leftApp = false;
+    // Make the overlay larger than the screen to avoid alpha at the edges.
+    private const int underlayFudgePixels = 80;
+
     void Awake()
     {
-        hidePosition = new Vector3(-(Screen.width + 10.0f), 0.0f, 0.0f);
-        background.SetDimensions(Screen.width + 15, Screen.height + 15);
+        hidePosition = new Vector3(-(Screen.width + underlayFudgePixels * 2), 0.0f, 0.0f);
+        underlay.SetDimensions(
+            Screen.width + underlayFudgePixels,
+            Screen.height + underlayFudgePixels);
         TweenPosition.Begin(menuGroup, 0.0f, hidePosition);
         UIEventListener.Get(menuButton).onClick += OnButtonPressMenu;
         UIEventListener.Get(facebookButton).onClick += OnFacebookPress;
         UIEventListener.Get(twitterButton).onClick += OnTwitterPress;
         UIEventListener.Get(reviewButton).onClick += OnReviewPress;
-        UIEventListener.Get(background.gameObject).onClick += HideMenu;
-
+        UIEventListener.Get(underlay.gameObject).onClick += HideMenu;
     }
 
     void OnDestroy()
@@ -51,6 +55,11 @@ public class Menu : MonoBehaviour
         GoogleAnalytics.SafeLogScreen("review-btn-clicked");
 
         UniRate.Instance.RateIfNetworkAvailable();
+    }
+
+    void OnApplicationPause()
+    {
+        leftApp = true;
     }
 
     IEnumerator OpenSocialPage(string appUrl, string browserUrl)
