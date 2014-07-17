@@ -5,12 +5,16 @@ public class Tutorial : MonoBehaviour
 {
     public GameObject hand;
     public AccountSettings account;
-    public Vector3 startPostion;
-    public Vector3 endPosition;
+    public Vector3 endOffset;
     private float duration = 1.5f;
+    private Vector3 startPosition;
+    private Vector3 endPosition;
     // Update is called once per frame
     void Awake()
     {
+        // world position isn't working, not sure why.
+        startPosition = hand.transform.localPosition;
+        endPosition = startPosition + endOffset;
         account.CompletedTutorialEvent += CompletedTutorial;
         EventManager.Pause += OnPause;
         EventManager.Resume += OnResume;
@@ -45,7 +49,7 @@ public class Tutorial : MonoBehaviour
         {
             return;
         }
-        TweenPosition.Begin(hand, 0.0f, startPostion);
+        TweenPosition.Begin(hand, 0.0f, startPosition);
         TweenAlpha.Begin(hand, 0.0f, 1.0f);
         EventDelegate.Add(TweenPosition.Begin(hand, duration, endPosition).onFinished, TweenEndFinished, true);
     }
