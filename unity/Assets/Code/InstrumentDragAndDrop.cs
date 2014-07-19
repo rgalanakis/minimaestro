@@ -172,9 +172,13 @@ public class InstrumentDragAndDrop : UIDragDropItem
         {
             SetContainerAndUpdate(startingContainer);  
         }
-        else
+        else if (targetContainer.tag == "stage_grid")
         {
             SetContainerAndUpdate(targetContainer);
+        }
+        else
+        {
+            SetContainerAndUpdate(startingContainer);  
         }
 
     }
