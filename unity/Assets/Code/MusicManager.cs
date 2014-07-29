@@ -20,8 +20,22 @@ public class MusicManager : MonoBehaviour
     public AudioSource drums;
     public AudioSource horn;
 
+    private AudioSource[] sources;
+
     public SongObject[] songs;
     private IEnumerator songEnumerator;
+
+    // In order to coordinate looping between all tracks,
+    // we keep track of whether the song is playing or paused,
+    // how long its been playing, and when it should re-loop.
+    // Each tick of the update loop, we:
+    //   - do nothing if the song is paused.
+    //   - add the delta from the last update to the time we've played.
+    //   - if we have been playing longer than the loop duration,
+    //     restart the song (and set the 'played time' back to 0).
+    private bool isPlaying;
+    private float restartAfter;
+    private float timePlayed;
 
     void Start()
     {
@@ -29,12 +43,32 @@ public class MusicManager : MonoBehaviour
 
         UIEventListener.Get(playButton).onClick += OnButtonPlay;
         UIEventListener.Get(demoButton).onClick += OnButtonDemo;
-        songEnumerator = EnumerateSongs().GetEnumerator();
-        SwitchSong(false);
         EventManager.Highlight += OnHighlightOn;
         EventManager.NoHighlight += OnHighlightOff;
         EventManager.Pause += PauseInstruments;
         EventManager.Resume += PlayInstruments;
+
+        sources = new AudioSource[] {
+                xylophone,
+                violin,
+                tuba,
+                cymbals,
+                harp,
+                flute,
+                trumpet,
+                piano,
+                clarinet,
+                drums,
+                horn
+        };
+        // We do not want to loop automatically.
+        // See comments earlier in file.
+        foreach (var source in sources)
+        {
+                source.loop = false;
+        }
+        songEnumerator = EnumerateSongs().GetEnumerator();
+        SwitchSong(false);
     }
 
     void OnDestroy()
@@ -43,6 +77,20 @@ public class MusicManager : MonoBehaviour
         NGUIHelper.RemoveClickEventListener(demoButton, OnButtonDemo);
         EventManager.Highlight -= OnHighlightOn;
         EventManager.NoHighlight -= OnHighlightOff;
+    }
+
+    void Update()
+    {
+        if (!isPlaying)
+        {
+            return;
+        }
+        timePlayed += Time.deltaTime;
+        if (timePlayed >= restartAfter)
+        {
+            timePlayed = 0.0f;
+            PlayInstruments();
+        }
     }
 
     private IEnumerable<SongObject> EnumerateSongs()
@@ -130,6 +178,8 @@ public class MusicManager : MonoBehaviour
         drums.clip = newSong.drums;
         horn.clip = newSong.horn;
 
+        restartAfter = newSong.length;
+        timePlayed = 0.0f;
         PlayInstruments();
 
         EventManager.TriggerSongSwitch(newSong);
@@ -142,31 +192,19 @@ public class MusicManager : MonoBehaviour
 
     void PauseInstruments()
     {
-        xylophone.Pause();
-        violin.Pause();
-        tuba.Pause();
-        cymbals.Pause();
-        harp.Pause();
-        flute.Pause();
-        trumpet.Pause();
-        piano.Pause();
-        clarinet.Pause();
-        drums.Pause();
-        horn.Pause();
+        isPlaying = false;
+        foreach (AudioSource source in sources)
+        {
+            source.Pause();
+        }
     }
 
     void PlayInstruments()
     {
-        xylophone.Play();
-        violin.Play();
-        tuba.Play();
-        cymbals.Play();
-        harp.Play();
-        flute.Play();
-        trumpet.Play();
-        piano.Play();
-        clarinet.Play();
-        drums.Play();
-        horn.Play();
+        isPlaying = true;
+        foreach (AudioSource source in sources)
+        {
+            source.Play();
+        }
     }
 }

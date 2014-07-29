@@ -10,11 +10,11 @@ import symphony
 
 
 def parse():
-    p = argparse.ArgumentParser(usage='copy_mp3s.py scorename length')
+    p = argparse.ArgumentParser(usage='copy_mp3s.py scorename')
     p.add_argument('--test', action='store_true', help='Internal use.')
     p.add_argument(
-        'songname', help='Name of the song inside the source_Music folder.')
-    p.add_argument('length', help='Length of the result in mp3splt (<m>.<s>).')
+        'songname', help='Name of the song inside the source_Music folder, '
+                         'or "ALL" to export all mp3s.')
     return p.parse_args()
 
 
@@ -79,13 +79,22 @@ def get_srcdir(songname):
     return srcdir
 
 
-def main():
-    opts = parse()
-    srcdir = get_srcdir(opts.songname)
+def get_length(files):
+    maxsecs = 0
+    for f in files:
+        out = subprocess.check_output(['mp3info', '-p', '%S\n', f])
+        maxsecs = max(maxsecs, int(out))
+    minutes = maxsecs / 60
+    seconds = maxsecs % 60
+    return '%d.%0.2d' % (minutes, seconds)
 
+
+def compress_song(opts):
+    srcdir = get_srcdir(opts.songname)
     scorename, tgtdir = get_score_and_tgtdir(srcdir)
     srcs = list(symphony.listfiles(srcdir, '*.mp3'))
     check_sources(srcs)
+    length = get_length(srcs)
 
     def maketgt(src):
         return os.path.join(
@@ -93,10 +102,21 @@ def main():
     src_and_tgts = [(s, maketgt(s)) for s in srcs]
     if opts.test:
         del src_and_tgts[1:]
-    symphony.say('Compressing/copying %s music files to %s.',
-                 len(src_and_tgts), tgtdir)
-    symphony.pmap(lambda a: compress(a[0], a[1], opts.length), src_and_tgts)
+    symphony.say('Compressing/copying %s music files to %s (len: %s).',
+                 len(src_and_tgts), tgtdir, length)
+    symphony.pmap(lambda a: compress(a[0], a[1], length), src_and_tgts)
     symphony.say('Finished copying %s files.' % len(src_and_tgts))
+
+
+def main():
+    opts = parse()
+    if opts.songname == 'ALL':
+        for song in os.listdir(symphony.SMUSIC):
+            if not song.startswith('.'):
+                opts.songname = song
+                compress_song(opts)
+    else:
+        compress_song(opts)
 
 
 if __name__ == '__main__':

@@ -72,3 +72,12 @@ def chdir(d):
         yield
     finally:
         os.chdir(old)
+
+
+def iter_files(directory, pattern='*'):
+    """Returns a generator of files under directory that match pattern."""
+    for root, dirs, files in os.walk(directory):
+        for basename in files:
+            if fnmatch.fnmatch(basename, pattern):
+                filename = os.path.join(root, basename)
+                yield filename

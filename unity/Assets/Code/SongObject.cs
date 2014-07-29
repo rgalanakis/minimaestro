@@ -17,4 +17,9 @@ public class SongObject : MonoBehaviour
     public DemoSongObject demo;
     public string displayName;
     public string songId;
+
+    public float length
+    {
+        get { return xylophone.length;}
+    }
 }
