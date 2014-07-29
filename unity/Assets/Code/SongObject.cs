@@ -17,9 +17,16 @@ public class SongObject : MonoBehaviour
     public DemoSongObject demo;
     public string displayName;
     public string songId;
+        
+    /// <summary>
+    /// Dead time to add between loops of this song.
+    /// You will need to iterate in the build,
+    /// because workstation and build audio loop timing can vary.
+    /// </summary>
+    public float loopSilence = 0.7f;
 
     public float length
     {
-        get { return xylophone.length;}
+        get { return xylophone.length + loopSilence;}
     }
 }
