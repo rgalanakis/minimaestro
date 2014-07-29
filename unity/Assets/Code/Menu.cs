@@ -41,7 +41,7 @@ public class Menu : MonoBehaviour
             return;
         }
 
-        if (Input.GetTouch(0).phase == TouchPhase.Moved)
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
         {
             HideMenu(null);
         }
