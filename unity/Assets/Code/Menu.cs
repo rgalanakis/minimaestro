@@ -11,6 +11,7 @@ public class Menu : MonoBehaviour
     public UISprite underlay;
     private Vector3 hidePosition = new Vector3(-1030, 0, 0);
     bool leftApp = false;
+    bool menuVisible;
     // Make the overlay larger than the screen to avoid alpha at the edges.
     private const int underlayFudgePixels = 80;
 
@@ -31,25 +32,26 @@ public class Menu : MonoBehaviour
         NGUIHelper.RemoveClickEventListener(facebookButton, OnFacebookPress);
         NGUIHelper.RemoveClickEventListener(twitterButton, OnTwitterPress);
         NGUIHelper.RemoveClickEventListener(reviewButton, OnReviewPress);
-        NGUIHelper.RemoveClickEventListener(underlay.gameObject, HideMenu);
+        if (underlay != null)
+        {
+            NGUIHelper.RemoveClickEventListener(underlay.gameObject, HideMenu);
+        } 
     }
 
     void Update()
     {
-        if (menuGroup.gameObject.transform.position.x != 0)
+        if (menuVisible)
         {
-            return;
-        }
-
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
-        {
-            HideMenu(null);
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
+            {
+                HideMenu(null);
+            }
         }
     }
 
     void OnButtonPressMenu(GameObject go)
     {
-        if (menuGroup.gameObject.transform.position.x == 0)
+        if (menuVisible)
         {
             HideMenu(null);
         }
@@ -104,6 +106,7 @@ public class Menu : MonoBehaviour
 
     void ShowMenu()
     {
+        menuVisible = true;
         GoogleAnalytics.SafeLogScreen("menu-show");
         EventManager.TriggerPause();
         TweenPosition.Begin(menuGroup, 0.4f, Vector3.zero);
@@ -111,6 +114,7 @@ public class Menu : MonoBehaviour
 
     void HideMenu(GameObject go)
     {
+        menuVisible = false;
         GoogleAnalytics.SafeLogScreen("menu-hide");
         EventManager.TriggerResume();
         TweenPosition.Begin(menuGroup, 0.4f, hidePosition);
