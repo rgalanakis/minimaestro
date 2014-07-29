@@ -43,7 +43,7 @@ public class Menu : MonoBehaviour
 
         if (Input.GetTouch(0).phase == TouchPhase.Moved)
         {
-            HideMenu(null, true);
+            HideMenu(null);
         }
     }
 
