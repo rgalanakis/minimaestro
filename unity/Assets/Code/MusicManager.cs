@@ -20,6 +20,8 @@ public class MusicManager : MonoBehaviour
     public AudioSource drums;
     public AudioSource horn;
 
+    public AudioSource[] sources;
+
     public SongObject[] songs;
     private IEnumerator songEnumerator;
 
@@ -29,12 +31,30 @@ public class MusicManager : MonoBehaviour
 
         UIEventListener.Get(playButton).onClick += OnButtonPlay;
         UIEventListener.Get(demoButton).onClick += OnButtonDemo;
-        songEnumerator = EnumerateSongs().GetEnumerator();
-        SwitchSong(false);
         EventManager.Highlight += OnHighlightOn;
         EventManager.NoHighlight += OnHighlightOff;
         EventManager.Pause += PauseInstruments;
         EventManager.Resume += PlayInstruments;
+
+        sources = new AudioSource[] {
+                xylophone,
+                violin,
+                tuba,
+                cymbals,
+                harp,
+                flute,
+                trumpet,
+                piano,
+                clarinet,
+                drums,
+                horn
+        };
+//        foreach (var source in sources)
+//        {
+//                source.loop = false;
+//        }
+        songEnumerator = EnumerateSongs().GetEnumerator();
+        SwitchSong(false);
     }
 
     void OnDestroy()
@@ -142,31 +162,17 @@ public class MusicManager : MonoBehaviour
 
     void PauseInstruments()
     {
-        xylophone.Pause();
-        violin.Pause();
-        tuba.Pause();
-        cymbals.Pause();
-        harp.Pause();
-        flute.Pause();
-        trumpet.Pause();
-        piano.Pause();
-        clarinet.Pause();
-        drums.Pause();
-        horn.Pause();
+        foreach (AudioSource source in sources)
+        {
+            source.Pause();
+        }
     }
 
     void PlayInstruments()
     {
-        xylophone.Play();
-        violin.Play();
-        tuba.Play();
-        cymbals.Play();
-        harp.Play();
-        flute.Play();
-        trumpet.Play();
-        piano.Play();
-        clarinet.Play();
-        drums.Play();
-        horn.Play();
+        foreach (AudioSource source in sources)
+        {
+            source.Play();
+        }
     }
 }
