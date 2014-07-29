@@ -64,7 +64,7 @@ def compress(src, tgt, length, scale):
     abstemp = os.path.join(tempd, purename + ext)
     assert os.path.isfile(abstemp)
 
-    lame_opts = ['-m', 'm', '-V', '0', '-h', '--scale', str(scale)]
+    lame_opts = ['-m', 'm', '-V', '2', '-h', '--scale', str(scale)]
     lame_cmdline = ['lame'] + lame_opts + [abstemp, tgt]
     if not os.path.exists(os.path.dirname(tgt)):
         os.makedirs(os.path.dirname(tgt))
