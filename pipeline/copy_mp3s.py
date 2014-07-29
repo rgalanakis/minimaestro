@@ -56,7 +56,7 @@ def _trap_stdout(cmdline):
 tempd = tempfile.mkdtemp()
 
 
-def compress(src, tgt, length):
+def compress(src, tgt, length, scale):
     basename = os.path.basename(src)
     purename, ext = os.path.splitext(basename)
     split_cmdline = ['mp3splt', '-d', tempd, '-o', purename, src, '0.0', length]
@@ -64,7 +64,7 @@ def compress(src, tgt, length):
     abstemp = os.path.join(tempd, purename + ext)
     assert os.path.isfile(abstemp)
 
-    lame_opts = ['-m', 'm', '-V', '9', '-h']
+    lame_opts = ['-m', 'm', '-V', '0', '-h', '--scale', str(scale)]
     lame_cmdline = ['lame'] + lame_opts + [abstemp, tgt]
     if not os.path.exists(os.path.dirname(tgt)):
         os.makedirs(os.path.dirname(tgt))
@@ -77,6 +77,14 @@ def get_srcdir(songname):
     if not os.path.isdir(srcdir):
         sys.exit('%s is not a directory. Check your song name.' % srcdir)
     return srcdir
+
+
+def get_volume_scale(srcdir):
+    scalefile = os.path.join(srcdir, 'volumescale.txt')
+    if not os.path.isfile(scalefile):
+        return 1
+    with open(scalefile) as f:
+        return float(f.read().strip())
 
 
 def get_length(files):
@@ -95,6 +103,7 @@ def compress_song(opts):
     srcs = list(symphony.listfiles(srcdir, '*.mp3'))
     check_sources(srcs)
     length = get_length(srcs)
+    volume_scale = get_volume_scale(srcdir)
 
     def maketgt(src):
         return os.path.join(
@@ -104,7 +113,8 @@ def compress_song(opts):
         del src_and_tgts[1:]
     symphony.say('Compressing/copying %s music files to %s (len: %s).',
                  len(src_and_tgts), tgtdir, length)
-    symphony.pmap(lambda a: compress(a[0], a[1], length), src_and_tgts)
+    symphony.pmap(lambda a: compress(a[0], a[1], length, volume_scale),
+                  src_and_tgts)
     symphony.say('Finished copying %s files.' % len(src_and_tgts))
 
 
