@@ -20,10 +20,22 @@ public class MusicManager : MonoBehaviour
     public AudioSource drums;
     public AudioSource horn;
 
-    public AudioSource[] sources;
+    private AudioSource[] sources;
 
     public SongObject[] songs;
     private IEnumerator songEnumerator;
+
+    // In order to coordinate looping between all tracks,
+    // we keep track of whether the song is playing or paused,
+    // how long its been playing, and when it should re-loop.
+    // Each tick of the update loop, we:
+    //   - do nothing if the song is paused.
+    //   - add the delta from the last update to the time we've played.
+    //   - if we have been playing longer than the loop duration,
+    //     restart the song (and set the 'played time' back to 0).
+    private bool isPlaying;
+    private float restartAfter;
+    private float timePlayed;
 
     void Start()
     {
@@ -49,10 +61,12 @@ public class MusicManager : MonoBehaviour
                 drums,
                 horn
         };
-//        foreach (var source in sources)
-//        {
-//                source.loop = false;
-//        }
+        // We do not want to loop automatically.
+        // See comments earlier in file.
+        foreach (var source in sources)
+        {
+                source.loop = false;
+        }
         songEnumerator = EnumerateSongs().GetEnumerator();
         SwitchSong(false);
     }
@@ -63,6 +77,20 @@ public class MusicManager : MonoBehaviour
         NGUIHelper.RemoveClickEventListener(demoButton, OnButtonDemo);
         EventManager.Highlight -= OnHighlightOn;
         EventManager.NoHighlight -= OnHighlightOff;
+    }
+
+    void Update()
+    {
+        if (!isPlaying)
+        {
+            return;
+        }
+        timePlayed += Time.deltaTime;
+        if (timePlayed >= restartAfter)
+        {
+            timePlayed = 0.0f;
+            PlayInstruments();
+        }
     }
 
     private IEnumerable<SongObject> EnumerateSongs()
@@ -150,6 +178,8 @@ public class MusicManager : MonoBehaviour
         drums.clip = newSong.drums;
         horn.clip = newSong.horn;
 
+        restartAfter = newSong.length;
+        timePlayed = 0.0f;
         PlayInstruments();
 
         EventManager.TriggerSongSwitch(newSong);
@@ -162,6 +192,7 @@ public class MusicManager : MonoBehaviour
 
     void PauseInstruments()
     {
+        isPlaying = false;
         foreach (AudioSource source in sources)
         {
             source.Pause();
@@ -170,6 +201,7 @@ public class MusicManager : MonoBehaviour
 
     void PlayInstruments()
     {
+        isPlaying = true;
         foreach (AudioSource source in sources)
         {
             source.Play();
