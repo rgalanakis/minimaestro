@@ -35,7 +35,7 @@ public class HighlightManager : MonoBehaviour
         percussionButtonSprite = percussionButton.GetComponentInChildren<UISprite>();
         blackOverlay.gameObject.SetActive(false);
         sectionLabel.gameObject.SetActive(false);
-        blackOverlay.SetDimensions(Screen.width * 3, Screen.height * 3);
+        //blackOverlay.SetDimensions(Screen.width * 3, Screen.height * 3);
         UIEventListener.Get(windButton).onClick += OnButtonClick;
         UIEventListener.Get(stringButton).onClick += OnButtonClick;
         UIEventListener.Get(brassButton).onClick += OnButtonClick;

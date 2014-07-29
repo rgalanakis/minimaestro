@@ -17,27 +17,28 @@ public class Menu : MonoBehaviour
     void Awake()
     {
         hidePosition = new Vector3(-(Screen.width + underlayFudgePixels * 2), 0.0f, 0.0f);
-        underlay.SetDimensions(
-            Screen.width + underlayFudgePixels,
-            Screen.height + underlayFudgePixels);
         TweenPosition.Begin(menuGroup, 0.0f, hidePosition);
         UIEventListener.Get(menuButton).onClick += OnButtonPressMenu;
         UIEventListener.Get(facebookButton).onClick += OnFacebookPress;
         UIEventListener.Get(twitterButton).onClick += OnTwitterPress;
         UIEventListener.Get(reviewButton).onClick += OnReviewPress;
-        UIEventListener.Get(underlay.gameObject).onClick += HideMenu;
+        UIEventListener.Get(underlay.gameObject).onPress += HideMenu;
     }
 
     void OnDestroy()
     {
         NGUIHelper.RemoveClickEventListener(menuButton, OnButtonPressMenu);
+        NGUIHelper.RemoveClickEventListener(facebookButton, OnFacebookPress);
+        NGUIHelper.RemoveClickEventListener(twitterButton, OnTwitterPress);
+        NGUIHelper.RemoveClickEventListener(reviewButton, OnReviewPress);
+        NGUIHelper.RemovePressEventListener(underlay.gameObject, HideMenu);
     }
     
     void OnButtonPressMenu(GameObject go)
     {
         if (menuGroup.gameObject.transform.position.x == 0)
         {
-            HideMenu(null);
+            HideMenu(null, true);
         }
         else
         {
@@ -95,7 +96,7 @@ public class Menu : MonoBehaviour
         TweenPosition.Begin(menuGroup, 0.4f, Vector3.zero);
     }
 
-    void HideMenu(GameObject go)
+    void HideMenu(GameObject go, bool pressed)
     {
         GoogleAnalytics.SafeLogScreen("menu-hide");
         EventManager.TriggerResume();
