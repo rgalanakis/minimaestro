@@ -51,7 +51,7 @@ public class Menu : MonoBehaviour
     {
         if (menuGroup.gameObject.transform.position.x == 0)
         {
-            HideMenu(null, true);
+            HideMenu(null);
         }
         else
         {
