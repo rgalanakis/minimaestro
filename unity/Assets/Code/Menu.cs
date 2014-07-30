@@ -17,7 +17,7 @@ public class Menu : MonoBehaviour
 
     void Awake()
     {
-        hidePosition = new Vector3(-(Screen.width + underlayFudgePixels * 2), 0.0f, 0.0f);
+        hidePosition = new Vector3(-(underlay.drawingDimensions.z * 2), 0.0f, 0.0f);
         TweenPosition.Begin(menuGroup, 0.0f, hidePosition);
         UIEventListener.Get(menuButton).onClick += OnButtonPressMenu;
         UIEventListener.Get(facebookButton).onClick += OnFacebookPress;
