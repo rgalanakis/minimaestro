@@ -7,7 +7,6 @@ public class StageContainer : UIDragDropContainer
     public ParticleSystem glowSparkleAdditive;
     private GameObject instrumentOnStage;
     private float dragColorAlpha = 0.5f;
-    private float hasInstrumentColorAlpha = 0.1f;
     private Color defaultColor = new Color(1f, 1f, 1f, 0.02f);
     void Start()
     {
@@ -41,7 +40,6 @@ public class StageContainer : UIDragDropContainer
     public void DropInstrument(GameObject container, GameObject instrumentObj)
     {
         StopSparkle();
-        InstrumentDragAndDrop instrument = instrumentObj.GetComponent<InstrumentDragAndDrop>();
         if (container == this.gameObject)
         {
             instrumentOnStage = instrumentObj;

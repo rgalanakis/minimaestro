@@ -63,7 +63,7 @@ public class Menu : MonoBehaviour
 
     void OnReviewPress(GameObject go)
     {
-        if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.WindowsEditor)
+        if (Application.isEditor)
         {
             return;
         }
