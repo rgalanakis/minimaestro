@@ -3,22 +3,23 @@ using System.Collections;
 
 public class Tutorial : MonoBehaviour
 {
+    private static bool tutorialCompleted = false;
+
     public GameObject hand;
-    public AccountSettings account;
     public Vector3 endOffset;
     private float duration = 1.5f;
     private Vector3 startPosition;
     private Vector3 endPosition;
-    // Update is called once per frame
+
     void Awake()
     {
         // world position isn't working, not sure why.
         startPosition = hand.transform.localPosition;
         endPosition = startPosition + endOffset;
-        account.CompletedTutorialEvent += CompletedTutorial;
+        EventManager.Drop += CompleteTutorial;
         EventManager.Pause += OnPause;
         EventManager.Resume += OnResume;
-        if (!AccountSettings.completedTutorial)
+        if (!tutorialCompleted)
         {
             EventDelegate.Add(TweenPosition.Begin(hand, duration, endPosition).onFinished, TweenEndFinished, true);
         }
@@ -27,8 +28,9 @@ public class Tutorial : MonoBehaviour
     {
         EventManager.Pause -= OnPause;
         EventManager.Resume -= OnResume;
-        account.CompletedTutorialEvent -= CompletedTutorial;
+        EventManager.Drop -= CompleteTutorial;
     }
+
     public void TweenEndFinished()
     {
         TweenHide();
@@ -54,10 +56,17 @@ public class Tutorial : MonoBehaviour
         EventDelegate.Add(TweenPosition.Begin(hand, duration, endPosition).onFinished, TweenEndFinished, true);
     }
 
-    public void CompletedTutorial()
+    public void CompleteTutorial(GameObject container, GameObject instrumentObj)
     {
-        GoogleAnalytics.SafeLogScreen("tutorial-completed");
-        hand.SetActive(false);
+        if (container.tag == "stage_grid")
+        {
+            if (!tutorialCompleted)
+            {
+                GoogleAnalytics.SafeLogScreen("tutorial-completed");
+            }
+            tutorialCompleted = true;
+            hand.SetActive(false);
+        }
     }
 
     void OnPause()

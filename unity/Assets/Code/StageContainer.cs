@@ -3,7 +3,6 @@ using System.Collections;
 
 public class StageContainer : UIDragDropContainer
 {
-    public AccountSettings account;
     public ParticleSystem glowSparkle;
     public ParticleSystem glowSparkleAdditive;
     private GameObject instrumentOnStage;
@@ -45,7 +44,6 @@ public class StageContainer : UIDragDropContainer
         InstrumentDragAndDrop instrument = instrumentObj.GetComponent<InstrumentDragAndDrop>();
         if (container == this.gameObject)
         {
-            account.CompletedTutorial();
             instrumentOnStage = instrumentObj;
         }
         else if (instrumentOnStage != null)
