@@ -45,7 +45,11 @@ public class GoogleAnalytics : MonoBehaviour {
 
 	public void LogScreen(string title)
 	{
-		
+		if (Application.isEditor)
+        {
+            print("Logging screen: " + title);
+        }
+
 		title = WWW.EscapeURL(title);
 		
 		var url = "http://www.google-analytics.com/collect?v=1&ul=en-us&t=appview&sr="+screenRes+"&an="+WWW.EscapeURL(appName)+"&a=448166238&tid="+propertyID+"&aid="+bundleID+"&cid="+WWW.EscapeURL(clientID)+"&_u=.sB&av="+appVersion+"&_v=ma1b3&cd="+title+"&qt=2500&z=185";
