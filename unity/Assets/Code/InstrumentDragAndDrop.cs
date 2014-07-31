@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public class InstrumentDragAndDrop : UIDragDropItem
 {
@@ -241,15 +242,14 @@ public class InstrumentDragAndDrop : UIDragDropItem
 
     void OnDemoStart(InstrumentDragAndDrop[] instruments, StageContainer[] stageContainers)
     {
-        for (int i = 0; i < instruments.Length; i++)
+        int ind = System.Array.IndexOf(instruments, this);
+        if (ind >= 0)
         {
-            if (instruments [i] == this)
-            {
-                SetContainerAndUpdate(stageContainers [i].gameObject);
-                return;
-            }
+            SetContainerAndUpdate(stageContainers[ind].gameObject);
         }
-
-        SetContainerAndUpdate(startingContainer);
+        else
+        {
+            SetContainerAndUpdate(startingContainer);
+        }
     }
 }
