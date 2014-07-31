@@ -56,6 +56,8 @@ public class EventManager : MonoBehaviour
 
     #endregion
 
+    #region Song Events
+
     public delegate void SongSwitchEvent(SongObject song);
     public static event SongSwitchEvent SongSwitched;
 
@@ -78,6 +80,10 @@ public class EventManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    # region Misc Events
+
     public static event Action Pause;
     public static void TriggerPause()
     {
@@ -95,4 +101,14 @@ public class EventManager : MonoBehaviour
             Resume();
         }
     }
+
+    public static event Action TutorialCompleted;
+    public static void TriggerTutorialCompleted()
+    {
+        if (TutorialCompleted != null)
+        {
+            TutorialCompleted();
+        }
+    }
+    #endregion
 }

@@ -58,14 +58,11 @@ public class Tutorial : MonoBehaviour
 
     public void CompleteTutorial(GameObject container, GameObject instrumentObj)
     {
-        if (container.tag == "stage_grid")
+        if (container.tag == "stage_grid" && !tutorialCompleted)
         {
-            if (!tutorialCompleted)
-            {
-                GoogleAnalytics.SafeLogScreen("tutorial-completed");
-            }
             tutorialCompleted = true;
             hand.SetActive(false);
+            EventManager.TriggerTutorialCompleted();
         }
     }
 

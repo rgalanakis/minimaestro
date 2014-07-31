@@ -107,7 +107,6 @@ public class Menu : MonoBehaviour
     void ShowMenu()
     {
         menuVisible = true;
-        GoogleAnalytics.SafeLogScreen("menu-show");
         EventManager.TriggerPause();
         TweenPosition.Begin(menuGroup, 0.4f, Vector3.zero);
     }
@@ -115,7 +114,6 @@ public class Menu : MonoBehaviour
     void HideMenu(GameObject go)
     {
         menuVisible = false;
-        GoogleAnalytics.SafeLogScreen("menu-hide");
         EventManager.TriggerResume();
         TweenPosition.Begin(menuGroup, 0.4f, hidePosition);
     }

@@ -39,8 +39,6 @@ public class MusicManager : MonoBehaviour
 
     void Start()
     {
-        GoogleAnalytics.SafeLogScreen("game-start");
-
         UIEventListener.Get(playButton).onClick += OnButtonPlay;
         UIEventListener.Get(demoButton).onClick += OnButtonDemo;
         EventManager.Highlight += OnHighlightOn;
@@ -154,17 +152,6 @@ public class MusicManager : MonoBehaviour
     {
         CancelInvoke();
         DisplayAndFadeSongName(newSong.displayName.Replace("\\n", "\n"));
-
-        string gaPrefix;
-        if (demo)
-        {
-            gaPrefix = "song-demo-";
-        }
-        else
-        {
-            gaPrefix = "song-switch-";
-        }
-        GoogleAnalytics.SafeLogScreen(gaPrefix + newSong.songId);
 
         xylophone.clip = newSong.xylophone;
         violin.clip = newSong.violin;
