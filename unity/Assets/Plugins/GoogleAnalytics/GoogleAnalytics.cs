@@ -2,61 +2,60 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class GoogleAnalytics : MonoBehaviour {
+public class GoogleAnalytics : MonoBehaviour
+{
+    public string propertyID;
 	
-	public string propertyID;
+    public static GoogleAnalytics instance;
 	
-	public static GoogleAnalytics instance;
+    public string bundleID;
+    public string appName;
+    public string appVersion;
 	
-	public string bundleID;
-	public string appName;
-	public string appVersion;
+    private string screenRes;
+    private string clientID;
 	
-	private string screenRes;
-	private string clientID;
+    void Awake()
+    {
+        if (instance)
+        {
+            DestroyImmediate(gameObject);
+        }
+        else
+        {
+            DontDestroyOnLoad(gameObject);
+            instance = this;
+        }
+    }
 	
-	void Awake()
-	{
-		if(instance)
-			DestroyImmediate(gameObject);
-		else
-		{
-			DontDestroyOnLoad(gameObject);
-			instance = this;
-		}
-	}
-	
-	void Start() 
-	{
-	
-		screenRes = Screen.width + "x" + Screen.height;
-		
-		clientID = SystemInfo.deviceUniqueIdentifier;
-			
-	}
+    void Start()
+    {
+        screenRes = Screen.width + "x" + Screen.height;
+        clientID = SystemInfo.deviceUniqueIdentifier;
+    }
 
-	public static void SafeLogScreen(string title)
-	{
-		if (instance)
-		{
-			instance.LogScreen(title);
-		}
-	}
+    public static void SafeLogScreen(string title)
+    {
+        if (instance)
+        {
+            instance.LogScreen(title);
+        }
+    }
 
-	public void LogScreen(string title)
-	{
-		if (Application.isEditor)
+    public void LogScreen(string title)
+    {
+        if (Application.isEditor)
         {
             Debug.Log("Logging screen: " + title);
         }
 
-		title = WWW.EscapeURL(title);
+        title = WWW.EscapeURL(title);
 		
-		var url = "http://www.google-analytics.com/collect?v=1&ul=en-us&t=appview&sr="+screenRes+"&an="+WWW.EscapeURL(appName)+"&a=448166238&tid="+propertyID+"&aid="+bundleID+"&cid="+WWW.EscapeURL(clientID)+"&_u=.sB&av="+appVersion+"&_v=ma1b3&cd="+title+"&qt=2500&z=185";
+        var url = "http://www.google-analytics.com/collect?v=1&ul=en-us&t=appview&sr=" + screenRes + "&an=" + WWW.EscapeURL(appName) + "&a=448166238&tid=" + propertyID + "&aid=" + bundleID + "&cid=" + WWW.EscapeURL(clientID) + "&_u=.sB&av=" + appVersion + "&_v=ma1b3&cd=" + title + "&qt=2500&z=185";
 		
-		WWW request = new WWW(url);
+        WWW request = new WWW(url);
 		
-		/*if(request.error == null)
+        /*if(request.error == null)
 		{
 			if (request.responseHeaders.ContainsKey("STATUS"))
 			{
@@ -73,7 +72,5 @@ public class GoogleAnalytics : MonoBehaviour {
 			Debug.LogWarning(request.error.ToString());	
 		}*/
 		
-	}
-	
-	
+    }
 }
