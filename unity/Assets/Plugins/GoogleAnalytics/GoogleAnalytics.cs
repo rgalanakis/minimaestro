@@ -47,7 +47,7 @@ public class GoogleAnalytics : MonoBehaviour {
 	{
 		if (Application.isEditor)
         {
-            print("Logging screen: " + title);
+            Debug.Log("Logging screen: " + title);
         }
 
 		title = WWW.EscapeURL(title);

@@ -27,6 +27,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
 
     protected override void Start()
     {
+        Analytics.Initialize();
         base.Start();
         startingContainer = NGUITools.FindInParents<UIDragDropContainer>(this.gameObject).gameObject;
         currentContainer = startingContainer;
