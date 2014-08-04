@@ -110,5 +110,14 @@ public class EventManager : MonoBehaviour
             TutorialCompleted();
         }
     }
+
+    public static event Action SongCompleted;
+    public static void TriggerSongCompleted()
+    {
+        if (SongCompleted != null)
+        {
+            SongCompleted();
+        }
+    }
     #endregion
 }

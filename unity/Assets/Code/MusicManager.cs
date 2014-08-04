@@ -22,6 +22,7 @@ public class MusicManager : MonoBehaviour
 
     private AudioSource[] sources;
 
+    public Dictionary<AudioSource, HighlightManager.InstrumentType> sourceTypes;
     public SongObject[] songs;
     private IEnumerator songEnumerator;
 
@@ -36,6 +37,8 @@ public class MusicManager : MonoBehaviour
     private bool isPlaying;
     private float restartAfter;
     private float timePlayed;
+    private float startVolume = 0.01f;
+    private float nonSectionButtonVolume = 0.5f; 
 
     void Start()
     {
@@ -45,6 +48,7 @@ public class MusicManager : MonoBehaviour
         EventManager.NoHighlight += OnHighlightOff;
         EventManager.Pause += PauseInstruments;
         EventManager.Resume += PlayInstruments;
+        EventManager.TutorialCompleted += OnTutorialCompleted;
 
         sources = new AudioSource[] {
                 xylophone,
@@ -59,11 +63,13 @@ public class MusicManager : MonoBehaviour
                 drums,
                 horn
         };
+
         // We do not want to loop automatically.
         // See comments earlier in file.
         foreach (var source in sources)
         {
-                source.loop = false;
+            source.loop = false;
+            source.volume = startVolume;
         }
         songEnumerator = EnumerateSongs().GetEnumerator();
         SwitchSong(false);
@@ -75,6 +81,7 @@ public class MusicManager : MonoBehaviour
         NGUIHelper.RemoveClickEventListener(demoButton, OnButtonDemo);
         EventManager.Highlight -= OnHighlightOn;
         EventManager.NoHighlight -= OnHighlightOff;
+        EventManager.TutorialCompleted -= OnTutorialCompleted;
     }
 
     void Update()
@@ -87,6 +94,7 @@ public class MusicManager : MonoBehaviour
         if (timePlayed >= restartAfter)
         {
             timePlayed = 0.0f;
+            EventManager.TriggerSongCompleted();
             PlayInstruments();
         }
     }
@@ -102,6 +110,16 @@ public class MusicManager : MonoBehaviour
         }
     }
 
+    public void OnTutorialCompleted()
+    {
+        foreach (var source in sources)
+        {
+            if (source.volume != 1)
+            {
+                source.volume = 0;
+            }
+        }
+    }
     private SongObject NextSong()
     {
         songEnumerator.MoveNext();

@@ -211,6 +211,10 @@ public class InstrumentDragAndDrop : UIDragDropItem
     {
         collider.enabled = true;
         this.GetComponent<UISprite>().color = normalColor; 
+        if (currentContainer.tag == "stage_grid")
+        {
+            audio.volume = 1.0f;
+        }
     }
 
     public void HighlightWithContainer(HighlightManager.InstrumentType type)
@@ -228,6 +232,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
             sprite.depth = normalDepth;
             if (currentContainer.tag == "stage_grid")
             {
+                audio.volume = 0.5f;
                 sprite.color = noHighlightColor;
             }
             currentContainer.GetComponent<UISprite>().depth = normalDepth - 1;
@@ -245,7 +250,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
         int ind = System.Array.IndexOf(instruments, this);
         if (ind >= 0)
         {
-            SetContainerAndUpdate(stageContainers[ind].gameObject);
+            SetContainerAndUpdate(stageContainers [ind].gameObject);
         }
         else
         {
