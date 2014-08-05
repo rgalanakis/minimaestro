@@ -25,6 +25,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
     private Color noHighlightColor = new Color(0.3f, 0.3f, 0.3f, 1.0f);
     public int notePulseCount = 3;
     public float notePulseThreshold = 2.2f;
+    private const float nonHighlightedInstrumentVolume = 0.5f;
 
     protected override void Start()
     {
@@ -232,7 +233,7 @@ public class InstrumentDragAndDrop : UIDragDropItem
             sprite.depth = normalDepth;
             if (currentContainer.tag == "stage_grid")
             {
-                audio.volume = 0.5f;
+                audio.volume = nonHighlightedInstrumentVolume;
                 sprite.color = noHighlightColor;
             }
             currentContainer.GetComponent<UISprite>().depth = normalDepth - 1;
