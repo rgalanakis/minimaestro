@@ -37,8 +37,9 @@ public class MusicManager : MonoBehaviour
     private bool isPlaying;
     private float restartAfter;
     private float timePlayed;
-    private float startVolume = 0.01f;
-    private float nonSectionButtonVolume = 0.5f; 
+
+    private const float startVolume = 0.12f;
+    private AudioSource[] startingAudioSources;
 
     void Start()
     {
@@ -63,16 +64,32 @@ public class MusicManager : MonoBehaviour
                 drums,
                 horn
         };
+        startingAudioSources = new AudioSource[] { piano };
 
-        // We do not want to loop automatically.
-        // See comments earlier in file.
+        InitializeAudioSources();
+
+        songEnumerator = EnumerateSongs().GetEnumerator();
+        SwitchSong(false);
+    }
+
+    /// <summary>
+    /// Initializes the audio sources.
+    /// We do not want sources to loop automatically
+    /// (see comments earlier in file),
+    /// and we want to initialize some instruments with a starting volume.
+    /// Otherwise people are confused and think the volume is off.
+    /// (See issue #53)
+    /// </summary>
+    private void InitializeAudioSources()
+    {
+        foreach (var source in startingAudioSources)
+        {
+            source.volume = startVolume;
+        }
         foreach (var source in sources)
         {
             source.loop = false;
-            source.volume = startVolume;
         }
-        songEnumerator = EnumerateSongs().GetEnumerator();
-        SwitchSong(false);
     }
 
     void OnDestroy()
@@ -110,16 +127,19 @@ public class MusicManager : MonoBehaviour
         }
     }
 
-    public void OnTutorialCompleted()
+    private void OnTutorialCompleted()
     {
-        foreach (var source in sources)
+        // When the tutorial is completed, turn off any starting audio sources
+        // not at full volume.
+        foreach (var source in startingAudioSources)
         {
-            if (source.volume != 1)
+            if (source.volume < (1.0f - Mathf.Epsilon))
             {
-                source.volume = 0;
+                source.volume = 0.0f;
             }
         }
     }
+
     private SongObject NextSong()
     {
         songEnumerator.MoveNext();
