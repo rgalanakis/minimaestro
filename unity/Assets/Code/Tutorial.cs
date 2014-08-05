@@ -7,6 +7,7 @@ public class Tutorial : MonoBehaviour
 
     public GameObject hand;
     public GameObject handPlayButton;
+    public GameObject particlePlayButton;
     public GameObject playButton;
     public Vector3 endOffset;
     private float duration = 1.5f;
@@ -18,6 +19,7 @@ public class Tutorial : MonoBehaviour
     {
         // world position isn't working, not sure why.
         handPlayButton.SetActive(false);
+        particlePlayButton.SetActive(false);
         startPosition = hand.transform.localPosition;
         endPosition = startPosition + endOffset;
         EventManager.Drop += CompleteTutorial;
@@ -100,6 +102,7 @@ public class Tutorial : MonoBehaviour
         if (songSwitchCount > 1)
         {
             handPlayButton.SetActive(false);
+            particlePlayButton.SetActive(false);
         }
     }
 
@@ -107,33 +110,33 @@ public class Tutorial : MonoBehaviour
     {
         if (songSwitchCount < 2)
         {
+            particlePlayButton.SetActive(true);
             handPlayButton.SetActive(true);
-
-            EventDelegate.Add(TweenPosition.Begin(handPlayButton, duration, playButton.transform.localPosition).onFinished, TweenPlayButtonEndFinished, true);
+            TweenPlayButtonToStartPositionFinished();
         }
     }
 
     public void TweenPlayButtonEndFinished()
     {
-        TweenPlayButtonHide();
+        if (!handPlayButton.activeSelf)
+        {
+            return;
+        }
+        Vector3 startPos = playButton.transform.localPosition;
+        startPos.y -= 50;
+        startPos.x = handPlayButton.transform.localPosition.x;
+        EventDelegate.Add(TweenPosition.Begin(handPlayButton, duration, startPos).onFinished, TweenPlayButtonToStartPositionFinished, true);
     }
-    
-    public void TweenPlayButtonHide()
+
+    public void TweenPlayButtonToStartPositionFinished()
     {
         if (!handPlayButton.activeSelf)
         {
             return;
         }
-        EventDelegate.Add(TweenAlpha.Begin(handPlayButton, 0.75f, 0.1f).onFinished, TweenPlayButtonToEndPosition, true);
-    }
-    public void TweenPlayButtonToEndPosition()
-    {
-        if (!handPlayButton.activeSelf)
-        {
-            return;
-        }
-        TweenPosition.Begin(handPlayButton, 0.0f, Vector3.zero);
-        TweenAlpha.Begin(handPlayButton, 0.0f, 1.0f);
-        EventDelegate.Add(TweenPosition.Begin(handPlayButton, duration, playButton.transform.localPosition).onFinished, TweenPlayButtonEndFinished, true);
+        Vector3 endPos = playButton.transform.localPosition;
+        endPos.y += 20;
+        endPos.x = handPlayButton.transform.localPosition.x;
+        EventDelegate.Add(TweenPosition.Begin(handPlayButton, duration, endPos).onFinished, TweenPlayButtonEndFinished, true);
     }
 }
