@@ -17,17 +17,24 @@ public class Menu : MonoBehaviour
 
     void Awake()
     {
-        hidePosition = new Vector3(-(underlay.drawingDimensions.z * 2), 0.0f, 0.0f);
-        TweenPosition.Begin(menuGroup, 0.0f, hidePosition);
+
         UIEventListener.Get(menuButton).onClick += OnButtonPressMenu;
         UIEventListener.Get(facebookButton).onClick += OnFacebookPress;
         UIEventListener.Get(twitterButton).onClick += OnTwitterPress;
         UIEventListener.Get(reviewButton).onClick += OnReviewPress;
         UIEventListener.Get(underlay.gameObject).onClick += HideMenu;
+        EventManager.MenuHide += MenuHide;
     }
 
+    void MenuHide()
+    {
+        hidePosition = new Vector3(-(underlay.drawingDimensions.z * 2), 0.0f, 0.0f);
+        TweenPosition.Begin(menuGroup, 0.0f, hidePosition);
+
+    }
     void OnDestroy()
     {
+        EventManager.MenuHide -= MenuHide;
         NGUIHelper.RemoveClickEventListener(menuButton, OnButtonPressMenu);
         NGUIHelper.RemoveClickEventListener(facebookButton, OnFacebookPress);
         NGUIHelper.RemoveClickEventListener(twitterButton, OnTwitterPress);

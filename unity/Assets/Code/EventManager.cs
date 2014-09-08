@@ -93,6 +93,15 @@ public class EventManager : MonoBehaviour
         }
     }
 
+    public static event Action MenuHide;
+    public static void TriggerHideMenu()
+    {
+        if (MenuHide != null)
+        {
+            MenuHide();
+        }
+    }
+
     public static Action Resume;
     public static void TriggerResume()
     {
