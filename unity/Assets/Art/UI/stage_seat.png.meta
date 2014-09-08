@@ -1,6 +1,8 @@
 fileFormatVersion: 2
 guid: 2a7526f904561ac4f847f590c72ed173
 TextureImporter:
+  fileIDToRecycleName:
+    21300000: stage_seat
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
