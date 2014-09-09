@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Tutorial : MonoBehaviour
@@ -19,6 +19,9 @@ public class Tutorial : MonoBehaviour
     {
         // world position isn't working, not sure why.
         handPlayButton.SetActive(false);
+        Vector3 handPlayPos = playButton.transform.localPosition;
+        handPlayPos.y -= 50.0f;
+        handPlayButton.transform.localPosition = handPlayPos;
         particlePlayButton.SetActive(false);
         startPosition = hand.transform.localPosition;
         endPosition = startPosition + endOffset;
@@ -104,6 +107,7 @@ public class Tutorial : MonoBehaviour
             handPlayButton.SetActive(false);
             particlePlayButton.SetActive(false);
         }
+       
     }
 
     void OnCompleteSong()
@@ -124,7 +128,7 @@ public class Tutorial : MonoBehaviour
         }
         Vector3 startPos = playButton.transform.localPosition;
         startPos.y -= 50;
-        startPos.x = handPlayButton.transform.localPosition.x;
+        //startPos.x = handPlayButton.transform.localPosition.x;
         EventDelegate.Add(TweenPosition.Begin(handPlayButton, duration, startPos).onFinished, TweenPlayButtonToStartPositionFinished, true);
     }
 
@@ -135,8 +139,8 @@ public class Tutorial : MonoBehaviour
             return;
         }
         Vector3 endPos = playButton.transform.localPosition;
-        endPos.y += 20;
-        endPos.x = handPlayButton.transform.localPosition.x;
+        endPos.y += 20; 
+        //endPos.x = handPlayButton.transform.localPosition.x;
         EventDelegate.Add(TweenPosition.Begin(handPlayButton, duration, endPos).onFinished, TweenPlayButtonEndFinished, true);
     }
 }
