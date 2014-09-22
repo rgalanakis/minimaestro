@@ -12,16 +12,21 @@ public class Menu : MonoBehaviour
     private Vector3 hidePosition = new Vector3(-1030, 0, 0);
     bool leftApp = false;
     bool menuVisible;
+    public UILabel holdText;
+    bool rateButtonDown;
+    bool facebookButtonDown;
+    bool twitterButtonDown;
     // Make the overlay larger than the screen to avoid alpha at the edges.
     private const int underlayFudgePixels = 80;
+    float timer;
 
     void Awake()
     {
 
         UIEventListener.Get(menuButton).onClick += OnButtonPressMenu;
-        UIEventListener.Get(facebookButton).onClick += OnFacebookPress;
-        UIEventListener.Get(twitterButton).onClick += OnTwitterPress;
-        UIEventListener.Get(reviewButton).onClick += OnReviewPress;
+        UIEventListener.Get(facebookButton).onPress += OnFacebookPress;
+        UIEventListener.Get(twitterButton).onPress += OnTwitterPress;
+        UIEventListener.Get(reviewButton).onPress += OnReviewPress;
         UIEventListener.Get(underlay.gameObject).onClick += HideMenu;
         EventManager.MenuHide += MenuHide;
     }
@@ -36,9 +41,9 @@ public class Menu : MonoBehaviour
     {
         EventManager.MenuHide -= MenuHide;
         NGUIHelper.RemoveClickEventListener(menuButton, OnButtonPressMenu);
-        NGUIHelper.RemoveClickEventListener(facebookButton, OnFacebookPress);
-        NGUIHelper.RemoveClickEventListener(twitterButton, OnTwitterPress);
-        NGUIHelper.RemoveClickEventListener(reviewButton, OnReviewPress);
+        NGUIHelper.RemovePressEventListener(facebookButton, OnFacebookPress);
+        NGUIHelper.RemovePressEventListener(twitterButton, OnTwitterPress);
+        NGUIHelper.RemovePressEventListener(reviewButton, OnReviewPress);
         if (underlay != null)
         {
             NGUIHelper.RemoveClickEventListener(underlay.gameObject, HideMenu);
@@ -54,6 +59,40 @@ public class Menu : MonoBehaviour
                 HideMenu(null);
             }
         }
+        if (rateButtonDown || twitterButtonDown || facebookButtonDown)
+        {
+            timer += Time.deltaTime;
+            holdText.gameObject.SetActive(true);
+        }
+        else
+        {
+            timer = 0.0f;
+            holdText.gameObject.SetActive(false);
+        }
+
+        if (timer >= 3.0f)
+        {
+            rateButtonDown = false;
+            twitterButtonDown = false;
+            facebookButtonDown = false;
+            timer = 0.0f;
+            if (facebookButtonDown)
+            {
+                GoogleAnalytics.SafeLogScreen("facebook-btn-clicked");
+                StartCoroutine(OpenSocialPage("fb://profile/443299165761335", "https://www.facebook.com/SteadfastGames")); 
+            }
+            else if (twitterButtonDown)
+            {
+                GoogleAnalytics.SafeLogScreen("twitter-btn-clicked");
+                StartCoroutine(OpenSocialPage("twitter:///user?screen_name=SteadfastGame", "https://twitter.com/SteadfastGame"));
+            }
+            else
+            {
+                GoogleAnalytics.SafeLogScreen("review-btn-clicked");
+                UniRate.Instance.RateIfNetworkAvailable();
+            }
+
+        }
     }
 
     void OnButtonPressMenu(GameObject go)
@@ -68,16 +107,13 @@ public class Menu : MonoBehaviour
         }
     }
 
-    void OnReviewPress(GameObject go)
+    void OnReviewPress(GameObject go, bool pressed)
     {
         if (Application.isEditor)
         {
             return;
         }
-
-        GoogleAnalytics.SafeLogScreen("review-btn-clicked");
-
-        UniRate.Instance.RateIfNetworkAvailable();
+        rateButtonDown = pressed;
     }
 
     void OnApplicationPause()
@@ -99,16 +135,14 @@ public class Menu : MonoBehaviour
         }
     }
 
-    void OnFacebookPress(GameObject go)
+    void OnFacebookPress(GameObject go, bool pressed)
     {
-        GoogleAnalytics.SafeLogScreen("facebook-btn-clicked");
-        StartCoroutine(OpenSocialPage("fb://profile/443299165761335", "https://www.facebook.com/SteadfastGames")); 
+        facebookButtonDown = pressed;
     }
 
-    void OnTwitterPress(GameObject go)
+    void OnTwitterPress(GameObject go, bool pressed)
     {
-        GoogleAnalytics.SafeLogScreen("twitter-btn-clicked");
-        StartCoroutine(OpenSocialPage("twitter:///user?screen_name=SteadfastGame", "https://twitter.com/SteadfastGame"));
+        twitterButtonDown = pressed;
     }
 
     void ShowMenu()
